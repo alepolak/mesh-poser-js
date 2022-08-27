@@ -10,6 +10,8 @@ import { DirectionalLight } from 'three';
 
 const Poser = () => {
 
+    const ANIMATION_FRAME_RATE = 30;
+
     let container = useRef();
     let scaleRef = useRef();
     let [initialized, setInitialized] = useState(false);
@@ -27,21 +29,17 @@ const Poser = () => {
     let [animationActions, setAnimationActions] = useState([]);
     let [activeAction, setActiveAction] = useState();
     let [lastAction, setLastAction] = useState();
+    let [animationFrame, setAnimationFrame] = useState(0);
+    let [maxAnimationFrame, setMaxAnimationFrame] = useState(30);
+    let [singleStepMode, setSingleStepMode] = useState(false);
 
     //let [loader, setLoader] = useState(new THREE.FileLoader()); TODO --> REMOVE
     let [scene, setScene] = useState(new THREE.Scene());
 
-    const getData = () => {
-        return {
-            a: modelReady,
-            b: animationMixer,
-        }
-    };
-
     useEffect(() => {
-        if(!initialized){
+        if(!initialized && modelReady && animationMixer){
             setInitialized(true);
-            init(getData);
+            init(animationMixer);
         }
 
         if(fbxModel && fbxModel !== fbxLastModel) {
@@ -53,13 +51,11 @@ const Poser = () => {
             fbxModel.scale.set(fbxScale,fbxScale,fbxScale);
         }
 
-        if(modelReady) {
+        if(modelReady && animationMixer) {
             onChangedAnimation();
         }
 
-       
-        console.log(`USE EFFECT --  modelReady: ${modelReady}, animationMixer: ${animationMixer}`);
-    },[fbxModel, fbxScale, animationActions, activeAction, animationMixer, modelReady]);
+    },[fbxModel, fbxScale, animationActions, activeAction, animationMixer, modelReady, maxAnimationFrame]);
 
     /** Get Object Size
      * 
@@ -107,15 +103,16 @@ const Poser = () => {
             const loader = new FBXLoader();
             const object = loader.parse(contents);
             
+            setDefaultAnimation(object);
+            const size = getObjectSize(object);
+            setFbxOriginalScale(size.y);       
+            setFbxScale(1 / fbxOriginalScale);
+            scaleRef.current.value = size.y;
+
             object.traverse( function ( o ) {
                 if(o.isMesh) {
                     o.receiveShadow = true;
                     o.castShadow = true;
-                    const size = getObjectSize(o);
-                    setDefaultAnimation(o);
-                    setFbxOriginalScale(size.y);       
-                    setFbxScale(1 / fbxOriginalScale);
-                    scaleRef.current.value = size.y;
                     setModelReady(true);
                 }
             });
@@ -198,11 +195,12 @@ const Poser = () => {
 
     const onAnimationClicked = (i) => {
         console.log(`Animation ${i} clicked`);
+        setSingleStepMode(false);
         setAction(animationActions[i]);
     };
 
     const setAction = (toAction) => {
-        if (toAction != activeAction) {
+        if (toAction !== activeAction) {
             setLastAction(activeAction);
             setActiveAction(toAction);
         }
@@ -213,6 +211,19 @@ const Poser = () => {
         activeAction?.reset();
         activeAction?.fadeIn(1);
         activeAction?.play();
+        setAnimationFrameCount(activeAction?.getClip().duration);
+    };
+
+    const setAnimationFrameCount = (time) => {
+
+        if(!time) {
+            setMaxAnimationFrame(30);
+        } else {
+            var framesInAnimation = Math.round(time * ANIMATION_FRAME_RATE);
+            if(maxAnimationFrame != framesInAnimation) {
+                setMaxAnimationFrame(framesInAnimation === 0 ? 30 : framesInAnimation);
+            }
+        }
     };
 
     /** Update Model Scale.
@@ -247,11 +258,38 @@ const Poser = () => {
         saveAs( blob, `${modelName}.stl` ); //Save the Blob to file.stl
     };
 
-    const init = (getData) => {
+    const onAnimationFrameChange = (e) => {
+        var frame = e.target.value;
+        console.log(frame);
+        setAnimationFrame(frame); 
+        activeAction?.play();
+        activeAction.time = frame / ANIMATION_FRAME_RATE;
+        animationMixer.update(0.1);
+    };
 
-        let {modelReady, animationMixer} = getData();
-        console.log(`modelReady: ${modelReady}, animationMixer: ${animationMixer}`);
+    const onPauseContinue = () => {
+        if (singleStepMode) {
+            setSingleStepMode(false);
+            unPauseAllActions();
+        } else {     
+            setSingleStepMode(true);
+            pauseAllActions();
+        }
+    };
 
+    const pauseAllActions = () => {
+        animationActions.forEach( function ( action ) {
+            action.paused = true;
+        } );
+    };
+
+    const unPauseAllActions = () => {
+        animationActions.forEach( function ( action ) {
+            action.paused = false;
+        } );
+    };
+
+    const init = (animationMixer) => {
         // attributes
         let camera, controls;
         const renderer = new THREE.WebGLRenderer();
@@ -319,121 +357,16 @@ const Poser = () => {
         scene.add(getGround());
         scene.add(getHemiLight());
         scene.add(getDirectLight());
-
-        // Model and animations
-        /*fbxLoader.load(
-            '../models/swat.fbx',
-            (object) => {
-                object.scale.set(0.01, 0.01, 0.01)
-                object.receiveShadow = true;
-                object.castShadow = true;
-                mixer = new THREE.AnimationMixer(object)
-        
-                const animationAction = mixer.clipAction(
-                    object.animations[0]
-                )
-                animationActions.push(animationAction)
-                animationsFolder.add(animations, 'default')
-                activeAction = animationActions[0]
-        
-                scene.add(object)
-        
-                //add an animation from another file
-                fbxLoader.load(
-                    '../models/animation-kick.fbx',
-                    (object) => {
-                        console.log('loaded samba')
-        
-                        const animationAction = mixer.clipAction(
-                            object.animations[0]
-                        )
-                        animationActions.push(animationAction)
-                        animationsFolder.add(animations, 'samba')
-        
-                        //add an animation from another file
-                        fbxLoader.load(
-                            '../models/animation-zombie.fbx',
-                            (object) => {
-                                console.log('loaded bellydance')
-                                const animationAction = mixer.clipAction(
-                                    object.animations[0]
-                                )
-                                animationActions.push(animationAction)
-                                animationsFolder.add(animations, 'bellydance')
-        
-                                //add an animation from another file
-                                fbxLoader.load(
-                                    '../models/animation-hiphop.fbx',
-                                    (object) => {
-                                        console.log('loaded goofyrunning');
-                                        object.animations[0].tracks.shift() //delete the specific track that moves the object forward while running
-                                        //console.dir((object as THREE.Object3D).animations[0])
-                                        const animationAction = mixer.clipAction(
-                                            object.animations[0]
-                                        )
-                                        animationActions.push(animationAction)
-                                        animationsFolder.add(animations, 'goofyrunning')
-        
-                                        modelReady = true
-                                    },
-                                    (xhr) => {
-                                        console.log(
-                                            (xhr.loaded / xhr.total) * 100 + '% loaded'
-                                        )
-                                    },
-                                    (error) => {
-                                        console.log(error)
-                                    }
-                                )
-                            },
-                            (xhr) => {
-                                console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
-                            },
-                            (error) => {
-                                console.log(error)
-                            }
-                        )
-                    },
-                    (xhr) => {
-                        console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
-                    },
-                    (error) => {
-                        console.log(error)
-                    }
-                )
-            },
-            (xhr) => {
-                console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
-            },
-            (error) => {
-                console.log(error)
-            }
-        )*/
-        
-        // GUI
-        const gui = new GUI();
-        const animationsFolder = gui.addFolder('Animations');
-        animationsFolder.open();      
-        
+    
         function animate() {
-            let {a, b} = getData();
-            console.log(`INSIDE ANIMATE modelReady: ${a}, animationMixer: ${b}`);
-
             requestAnimationFrame(animate);
         
             controls.update();
         
-            if (a && b !== null) {
-                b.update(clock.getDelta());
-            }
+            animationMixer.update(clock.getDelta());
         
-            render();
-            //stats.update()
-        }
-        
-        function render() {
-            renderer.render(scene, camera)
-        }
+            renderer.render(scene, camera);
+        };
         
         animate();
     };
@@ -452,6 +385,12 @@ const Poser = () => {
                 <div>
                     {getAnimationButtons()}
                 </div> 
+            </div>
+            <div>
+            <button onClick={onPauseContinue}> Toggle </button>
+                <input type="range" min="0" max={maxAnimationFrame} value={animationFrame} onChange={onAnimationFrameChange} step="1"/>
+                <p> Max: {maxAnimationFrame} </p>
+                <p> Actual: {animationFrame} </p>
             </div>
             <div>     
                 <button onClick={bake}> Bake mesh </button>
