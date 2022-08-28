@@ -195,7 +195,6 @@ const Poser = () => {
 
     const onAnimationClicked = (i) => {
         console.log(`Animation ${i} clicked`);
-        setSingleStepMode(false);
         setAction(animationActions[i]);
     };
 
@@ -370,8 +369,6 @@ const Poser = () => {
         
         animate();
     };
-
-    
 
     return(
         <div>  
