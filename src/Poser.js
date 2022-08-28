@@ -1,12 +1,9 @@
 import React, {useRef, useEffect, useState} from 'react';
 import * as THREE from 'three';
-import GUI from 'lil-gui'; 
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import { saveAs } from 'file-saver';
 import { STLExporter } from './STLExporter';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
-import { DirectionalLight } from 'three';
 import './Poser.css';
 import Sidebar from './Sidebar';
 
