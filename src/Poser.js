@@ -35,7 +35,6 @@ const Poser = () => {
     let [maxAnimationFrame, setMaxAnimationFrame] = useState(30);
     let [singleStepMode, setSingleStepMode] = useState(false);
 
-    //let [loader, setLoader] = useState(new THREE.FileLoader()); TODO --> REMOVE
     let [scene, setScene] = useState(new THREE.Scene());
 
     useEffect(() => {
