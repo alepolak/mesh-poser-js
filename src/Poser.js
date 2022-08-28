@@ -7,6 +7,7 @@ import { saveAs } from 'file-saver';
 import { STLExporter } from './STLExporter';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
 import { DirectionalLight } from 'three';
+import './Poser.css';
 
 const Poser = () => {
 
@@ -189,7 +190,12 @@ const Poser = () => {
 
     const getAnimationButtons = () => {
         return animationActions.map( function(animation, i){
-            return <button key={i} onClick={() => {onAnimationClicked(i)} }> Animation {i} </button>
+            return (
+                <button key={i} className='animation__play__button' onClick={() => {onAnimationClicked(i)} }> 
+                    <img src='https://img.icons8.com/ios-glyphs/452/play--v1.png'/>
+                    <span> Animation {i} </span>
+                </button>
+            )
         }); 
     };
 
@@ -299,18 +305,18 @@ const Poser = () => {
         scene.add(new THREE.AxesHelper(15))
 
         // Background and fog
-        scene.background = new THREE.Color( 0xa0a0a0 );
-        scene.fog = new THREE.Fog( 0xa0a0a0, 10, 50 );
+        scene.background = new THREE.Color( 0x303030 );
+        scene.fog = new THREE.Fog( 0x303030, 10, 50 );
 
         // Lights
         const getHemiLight = () => {
-            const hemiLight = new THREE.HemisphereLight( 0xffffff, 0xfce3a2);
+            const hemiLight = new THREE.HemisphereLight( 0xfafafa, 0xfce3a2, 0.5);
             hemiLight.position.set( 0, 20, 0 );
             return hemiLight;
         };
         
         const getDirectLight = () => {
-            const dirLight = new THREE.DirectionalLight( 0xffffff );
+            const dirLight = new THREE.DirectionalLight( 0xfafafa );
             dirLight.position.set( - 3, 10, 10 );
             dirLight.lookAt(0,1,0);
             dirLight.castShadow = true;
@@ -325,7 +331,7 @@ const Poser = () => {
 
         // Ground
         const getGround = () => {
-            const mesh = new THREE.Mesh( new THREE.PlaneGeometry( 100, 100 ), new THREE.MeshPhongMaterial( { color: 0x999999, depthWrite: false } ) );
+            const mesh = new THREE.Mesh( new THREE.PlaneGeometry( 100, 100 ), new THREE.MeshPhongMaterial( { color: 0x575757, depthWrite: false } ) );
             mesh.rotation.x = - Math.PI / 2;
             mesh.receiveShadow = true;
             return mesh;
@@ -370,29 +376,47 @@ const Poser = () => {
         animate();
     };
 
+    // Icons
+    // PLAY: https://img.icons8.com/ios-glyphs/452/play--v1.png
+    // REPEAT: https://img.icons8.com/metro/452/repeat.png
+    // MODEL: https://img.icons8.com/external-good-lines-kalash/452/external-human-human-body-anatomy-good-lines-kalash-2.png
+    // ANIMATIONS: https://img.icons8.com/ios-filled/452/animation-rig.png
+
     return(
-        <div>  
-            <div> 
-                <input type="file" accept=".fbx" onChange={onModelLoad} />  
-                <input ref={scaleRef} type="number" />
-                <button onClick={onUpdateScale}> Update Scale </button>
+        <div className='app'>
+            <div className='toolbar'>
+                <div className='model__bar'>
+                    <p className='menu__title'> MODEL </p>
+                    <input className='model__load__button' type="file" accept=".fbx" onChange={onModelLoad} />
+                    <div className='model__scale__menu'>
+                        <input className='model__scale__input' ref={scaleRef} type="number" />
+                        <button className='model__scale__update__button' onClick={onUpdateScale}>
+                            <img src='https://img.icons8.com/fluency-systems-filled/452/stretch-diagonally.png'/>
+                        </button>
+                    </div>
+                </div>
+                <div className='animation__bar'>
+                    <p className='menu__title'> ANIMATIONS </p>
+                    <input className='animation__load__button' type="file" accept=".fbx" onChange={onAnimationLoad} multiple/>
+                    <div className='animation__buttons'>
+                        {getAnimationButtons()}
+                    </div> 
+                </div>
+                <div className='animation__inspector'>
+                    <p className='menu__title'> FRAMES </p>
+                    <div className='animation__frames'>
+                        <button className='animation__toggle__button' onClick={onPauseContinue}>
+                            <img src='https://img.icons8.com/ios-glyphs/452/pause--v1.png'/>
+                        </button>
+                        <p className='animation__frames__data'> {animationFrame}/{maxAnimationFrame} </p>
+                    </div>
+                    <input className='animation__frames__slider' type="range" min="0" max={maxAnimationFrame} value={animationFrame} onChange={onAnimationFrameChange} step="1"/>  
+                </div>
+                <div className='export__bar'>     
+                    <button  className='export__button' onClick={bake}> Bake mesh </button>
+                </div>
             </div>
-            <div>
-                <input type="file" accept=".fbx" onChange={onAnimationLoad} multiple/>
-                <div>
-                    {getAnimationButtons()}
-                </div> 
-            </div>
-            <div>
-            <button onClick={onPauseContinue}> Toggle </button>
-                <input type="range" min="0" max={maxAnimationFrame} value={animationFrame} onChange={onAnimationFrameChange} step="1"/>
-                <p> Max: {maxAnimationFrame} </p>
-                <p> Actual: {animationFrame} </p>
-            </div>
-            <div>     
-                <button onClick={bake}> Bake mesh </button>
-            </div>
-            <div ref={container}></div>
+            <div className='renderer' ref={container}></div>
         </div>
     );
 };
