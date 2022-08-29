@@ -53,6 +53,8 @@ const Poser = () => {
         if(modelReady && animationMixer) {
             onChangedAnimation();
         }
+    
+        console.log(`Use Effect --> ${modelReady}`);
 
     },[fbxModel, fbxScale, animationActions, activeAction, animationMixer, modelReady, maxAnimationFrame]);
 
@@ -125,7 +127,6 @@ const Poser = () => {
     const onAnimationLoad = (event) => {
         
         if(event.target.files.length > 0) {
-            const animationName = event.currentTarget.files[0].name.split('.')[0];
             const reader = new FileReader();
             reader.addEventListener('progress', onLoadingProgress);
             reader.addEventListener('error', onAnimationLoadingError);
@@ -374,21 +375,21 @@ const Poser = () => {
         animate();
     };
 
-    
-
     return(
         <div className='app'>
             <Sidebar 
-                onModelLoad={onModelLoad}
-                scaleRef={scaleRef}
-                onUpdateScale={onUpdateScale}
-                onAnimationLoad={onAnimationLoad}
-                onPauseContinue={onPauseContinue}
                 animationFrame={animationFrame}
-                maxAnimationFrame={maxAnimationFrame}
                 bake={bake}
                 getAnimationButtons={getAnimationButtons}
+                hasAnimations={animationActions.length > 1}
+                maxAnimationFrame={maxAnimationFrame}
+                modelReady={modelReady}
+                onAnimationLoad={onAnimationLoad}
                 onAnimationFrameChange={onAnimationFrameChange}
+                onModelLoad={onModelLoad}
+                onPauseContinue={onPauseContinue}
+                onUpdateScale={onUpdateScale}
+                scaleRef={scaleRef}
             />
             <div className='renderer' ref={container}></div>
         </div>
