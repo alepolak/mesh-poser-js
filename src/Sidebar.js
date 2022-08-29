@@ -1,5 +1,6 @@
 import React from 'react';
 import './Sidebar.css';
+import icons from './Icons';
 
 const Sidebar = (props) => {
 
@@ -11,7 +12,7 @@ const Sidebar = (props) => {
                     <div className='model__scale__menu'>
                         <input className='model__scale__input' ref={props.scaleRef} type="number" />
                         <button className='model__scale__update__button' onClick={props.onUpdateScale}>
-                            <img src='https://img.icons8.com/fluency-systems-filled/452/stretch-diagonally.png'/>
+                            <img src={icons.scale} alt='Scale model'/>
                         </button>
                     </div>
                 </div>
@@ -26,7 +27,7 @@ const Sidebar = (props) => {
                     <p className='menu__title'> FRAMES </p>
                     <div className='animation__frames'>
                         <button className='animation__toggle__button' onClick={props.onPauseContinue}>
-                            <img src='https://img.icons8.com/ios-glyphs/452/pause--v1.png'/>
+                            <img src={icons.pause} alt='Pause animation'/>
                         </button>
                         <p className='animation__frames__data'> {props.animationFrame}/{props.maxAnimationFrame} </p>
                     </div>

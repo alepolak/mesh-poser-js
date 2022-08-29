@@ -6,6 +6,7 @@ import { STLExporter } from './STLExporter';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
 import './Poser.css';
 import Sidebar from './Sidebar';
+import icons from './Icons';
 
 const Poser = () => {
 
@@ -189,7 +190,7 @@ const Poser = () => {
         return animationActions.map( function(animation, i){
             return (
                 <button key={i} className='animation__play__button' onClick={() => {onAnimationClicked(i)} }> 
-                    <img src='https://img.icons8.com/ios-glyphs/452/play--v1.png'/>
+                    <img src={icons.play} alt='Play animation'/>
                     <span> Animation {i} </span>
                 </button>
             )
@@ -373,11 +374,7 @@ const Poser = () => {
         animate();
     };
 
-    // Icons
-    // PLAY: https://img.icons8.com/ios-glyphs/452/play--v1.png
-    // REPEAT: https://img.icons8.com/metro/452/repeat.png
-    // MODEL: https://img.icons8.com/external-good-lines-kalash/452/external-human-human-body-anatomy-good-lines-kalash-2.png
-    // ANIMATIONS: https://img.icons8.com/ios-filled/452/animation-rig.png
+    
 
     return(
         <div className='app'>
