@@ -205,6 +205,7 @@ const Poser = () => {
 
     const setAction = (toAction) => {
         if (toAction !== activeAction) {
+            setSingleStepMode(false);
             setLastAction(activeAction);
             setActiveAction(toAction);
         }
@@ -212,10 +213,14 @@ const Poser = () => {
 
     const onChangedAnimation = () => {
         lastAction?.fadeOut(1);
-        activeAction?.reset();
-        activeAction?.fadeIn(1);
-        activeAction?.play();
-        setAnimationFrameCount(activeAction?.getClip().duration);
+        
+        if(activeAction) {
+            activeAction.reset();
+            activeAction.paused = false;
+            activeAction.fadeIn(1);
+            activeAction.play();
+            setAnimationFrameCount(activeAction.getClip().duration);
+        }
     };
 
     const setAnimationFrameCount = (time) => {
@@ -264,9 +269,10 @@ const Poser = () => {
 
     const onAnimationFrameChange = (e) => {
         var frame = e.target.value;
-        console.log(frame);
-        setAnimationFrame(frame); 
+        setAnimationFrame(frame);
+        setSingleStepMode(true);
         activeAction?.play();
+        activeAction.paused = true;
         activeAction.time = frame / ANIMATION_FRAME_RATE;
         animationMixer.update(0.1);
     };
