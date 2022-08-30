@@ -10,9 +10,9 @@ const Sidebar = (props) => {
                 <div className='animation__bar'>
                     <p className='menu__title'> ANIMATIONS </p>
                     <input className='animation__load__button' type="file" accept=".fbx" onChange={props.onAnimationLoad} multiple/>
-                    <div className='animation__buttons'>
+                    <form className='animation__radios'>
                         {props.getAnimationButtons()}
-                    </div> 
+                    </form> 
                 </div>
             );
         }

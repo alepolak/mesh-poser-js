@@ -32,6 +32,7 @@ const Poser = () => {
     let [animationFrame, setAnimationFrame] = useState(0);
     let [maxAnimationFrame, setMaxAnimationFrame] = useState(30);
     let [singleStepMode, setSingleStepMode] = useState(false);
+    let [selectedAnimationIndex, setSelectedAnimationIndex] = useState();
 
     let [scene, setScene] = useState(new THREE.Scene());
 
@@ -187,20 +188,20 @@ const Poser = () => {
         console.log((e.loaded / e.total) * 100 + '% loaded');
     };
 
+    const onAnimationSelected = (i) => {
+        setSelectedAnimationIndex(i);
+        setAction(animationActions[i]);
+    };
+
     const getAnimationButtons = () => {
         return animationActions.map( function(animation, i){
             return (
-                <button key={i} className='animation__play__button' onClick={() => {onAnimationClicked(i)} }> 
-                    <img src={icons.play} alt='Play animation'/>
-                    <span> Animation {i} </span>
-                </button>
+                <label className='animation__play__radio' key={i}>
+                    <input type="radio" value="option1" onChange={() => {onAnimationSelected(i)}} checked={selectedAnimationIndex === i} />
+                    Animation {i} 
+                </label>
             )
         }); 
-    };
-
-    const onAnimationClicked = (i) => {
-        console.log(`Animation ${i} clicked`);
-        setAction(animationActions[i]);
     };
 
     const setAction = (toAction) => {
