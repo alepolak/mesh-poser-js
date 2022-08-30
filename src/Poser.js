@@ -6,7 +6,6 @@ import { STLExporter } from './STLExporter';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
 import './Poser.css';
 import Sidebar from './Sidebar';
-import icons from './Icons';
 
 const Poser = () => {
 
