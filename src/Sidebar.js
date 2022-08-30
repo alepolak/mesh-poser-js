@@ -1,9 +1,13 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Sidebar.css';
 import icons from './Icons';
 
 const Sidebar = (props) => {
 
+    /**
+     *  Animation Menu
+     * 
+     */
     const drawAnimationMenu = () => {
         if(props.modelReady) {
             return (
@@ -18,6 +22,10 @@ const Sidebar = (props) => {
         }
     };
 
+    /**
+     *  Animation Player Menu
+     * 
+     */
     const drawAnimationPlayerMenu = () => {
         if(props.hasAnimations) {
             return (
@@ -25,7 +33,7 @@ const Sidebar = (props) => {
                     <p className='menu__title'> FRAMES </p>
                     <div className='animation__frames'>
                         <button className='animation__toggle__button' onClick={props.onPauseContinue}>
-                            <img src={icons.pause} alt='Pause animation'/>
+                            <img src={getPlayPuseIcon()} alt='Pause animation'/>
                         </button>
                         <p className='animation__frames__data'> {props.animationFrame}/{props.maxAnimationFrame} </p>
                     </div>
@@ -35,6 +43,14 @@ const Sidebar = (props) => {
         }
     };
 
+    const getPlayPuseIcon = () => {
+        return props.singleStepMode ? icons.play : icons.pause;
+    }
+
+    /**
+     *  Export Menu
+     * 
+     */
     const drawExportMenu = () => {
         if(props.modelReady) {
             return (
