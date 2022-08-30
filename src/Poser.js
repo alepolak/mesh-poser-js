@@ -396,6 +396,7 @@ const Poser = () => {
                 onPauseContinue={onPauseContinue}
                 onUpdateScale={onUpdateScale}
                 scaleRef={scaleRef}
+                singleStepMode={singleStepMode}
             />
             <div className='renderer' ref={container}></div>
         </div>
