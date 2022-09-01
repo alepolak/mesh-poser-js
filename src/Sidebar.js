@@ -5,7 +5,11 @@ import FileButton from './FileButton';
 
 const Sidebar = (props) => {
 
-    const drawScaleMenu = () => {
+    /**
+     * Scale input
+     * 
+     */
+    const drawScaleInput = () => {
         return (
             <div className='model__scale__menu'>
                 <p className='model__scale__label'>Scale:</p>
@@ -84,7 +88,7 @@ const Sidebar = (props) => {
                     onModelLoad={props.onModelLoad}
                     isMultiple={false}
                 />
-                {drawScaleMenu()}
+                {drawScaleInput()}
             </div>
             {drawAnimationMenu()}
             {drawAnimationPlayerMenu()}
