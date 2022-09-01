@@ -404,7 +404,6 @@ const Poser = () => {
                 onAnimationFrameChange={onAnimationFrameChange}
                 onModelLoad={onModelLoad}
                 onPauseContinue={onPauseContinue}
-                onUpdateScale={onUpdateScale}
                 onScaleChange={onScaleChange}
                 scaleRef={scaleRef}
                 singleStepMode={singleStepMode}
