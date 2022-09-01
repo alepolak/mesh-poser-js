@@ -239,8 +239,18 @@ const Poser = () => {
      * 
      */
     const onUpdateScale = () => {
+        
         setFbxScale(scaleRef.current.valueAsNumber / fbxOriginalScale);
     };
+
+    const onScaleChange = (e) => {
+        if(e.target.value > 0) {
+            console.log(e.target.value);
+            onUpdateScale();
+        } else {
+            e.target.value = 1;
+        }
+    }
 
     /** Bake animation.
      * 
@@ -395,6 +405,7 @@ const Poser = () => {
                 onModelLoad={onModelLoad}
                 onPauseContinue={onPauseContinue}
                 onUpdateScale={onUpdateScale}
+                onScaleChange={onScaleChange}
                 scaleRef={scaleRef}
                 singleStepMode={singleStepMode}
             />
