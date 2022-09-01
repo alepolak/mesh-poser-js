@@ -53,8 +53,6 @@ const Poser = () => {
         if(modelReady && animationMixer) {
             onChangedAnimation();
         }
-    
-        console.log(`Use Effect --> ${modelReady}`);
 
     },[fbxModel, fbxScale, animationActions, activeAction, animationMixer, modelReady, maxAnimationFrame]);
 
@@ -245,7 +243,6 @@ const Poser = () => {
 
     const onScaleChange = (e) => {
         if(e.target.value > 0) {
-            console.log(e.target.value);
             onUpdateScale();
         } else {
             e.target.value = 1;
@@ -257,7 +254,6 @@ const Poser = () => {
      * Bake the skinned mesh of the model.
      */
     function bake() {
-        console.log("BAKE");
         scene.traverse( function ( object ) {
             if ( !object.isSkinnedMesh ) return;
             if ( object.geometry.isBufferGeometry !== true ) throw new Error( 'Only BufferGeometry supported.' );
