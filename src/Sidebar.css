@@ -32,21 +32,7 @@
 }
 
 .model__scale__input {
-    width: 45px;
-    height: 20px;
-}
-
-.model__scale__update__button {
-    width: 25px;
-    height: 25px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-.model__scale__update__button img {
-    width: 20px;
+    width: 70px;
     height: 20px;
 }
 
