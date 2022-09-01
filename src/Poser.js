@@ -81,7 +81,7 @@ const Poser = () => {
 
         if(object.animations.length !== 0) {
             const animationAction = mix.clipAction(object.animations[0]);
-            setAnimationActions(prevArray => [...prevArray, animationAction]);
+            setAnimationActions([animationAction]);
             setActiveAction(animationActions[0]);
         }
     };
