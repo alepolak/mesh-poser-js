@@ -27,8 +27,12 @@
     align-items: center;
 }
 
+.model__scale__label {
+    margin: 0px;
+}
+
 .model__scale__input {
-    width: 90px;
+    width: 45px;
     height: 20px;
 }
 
