@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './Sidebar.css';
 import icons from './Icons';
+import FileButton from './FileButton';
 
 const Sidebar = (props) => {
 
@@ -13,7 +14,11 @@ const Sidebar = (props) => {
             return (
                 <div className='animation__bar'>
                     <p className='menu__title'> ANIMATIONS </p>
-                    <input className='animation__load__button' type="file" accept=".fbx" onChange={props.onAnimationLoad} multiple/>
+                    <FileButton
+                        buttonLabel="Load animations"
+                        onModelLoad={props.onAnimationLoad}
+                        isMultiple={true}
+                    />
                     <form className='animation__radios'>
                         {props.getAnimationButtons()}
                     </form> 
@@ -65,7 +70,11 @@ const Sidebar = (props) => {
         <div className='sidebar'>
             <div className='model__bar'>
                 <p className='menu__title'> MODEL </p>
-                <input className='model__load__button' type="file" accept=".fbx" onChange={props.onModelLoad} />
+                <FileButton 
+                    buttonLabel="Load model"
+                    onModelLoad={props.onModelLoad}
+                    isMultiple={false}
+                />
                 <div className='model__scale__menu'>
                     <input className='model__scale__input' ref={props.scaleRef} type="number" />
                     <button className='model__scale__update__button' onClick={props.onUpdateScale}>

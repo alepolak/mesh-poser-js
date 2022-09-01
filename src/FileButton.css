@@ -1,0 +1,30 @@
+.file__button::-webkit-file-upload-button {
+    visibility: hidden;
+}
+
+.file__button::before {
+    width: 98%;
+    height: 24px;
+    line-height: 26px;
+    text-align: center;
+    content: attr(data-content);
+    display: inline-block;
+    background: #f9f9f9;
+    border: 1px solid #999999;
+    border-radius: 3px;
+    -webkit-user-select: none;
+    cursor: pointer;
+}
+
+.file__button:hover::before {
+    background: #e3e3e3;
+}
+
+.file__button:active::before {
+    background: #999;
+}
+
+.file__button {
+    width: 90%;
+    height: 32px;
+}
