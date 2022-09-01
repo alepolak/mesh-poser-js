@@ -1,22 +1,30 @@
 
+
+
 .sidebar {
     position: fixed;
     width: 160px;
     left: 10px;
     top: 25%;
+    --menu-background-color: #fafafa;
+    --menu-outline-color: #e0e0e0;
+    --button-background-color: #f9f9f9;
+    --button-border-color: #999999;
+    --button-hover-color: #e3e3e3e3;
+    --shadow-color: #383838;
 }
 
 
 .model__bar {
     padding: 8px;
-    background-color: #fafafa;
+    background-color: var(--menu-background-color);
     border-radius: 8px;
-    outline: 1px solid #e0e0e0;
+    outline: 1px solid var(--menu-outline-color);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    box-shadow: 5px 5px 10px rgba(56, 56, 56, 1);
+    box-shadow: 5px 5px 10px var(--shadow-color);
 }
 
 .model__scale__menu {
@@ -39,14 +47,14 @@
 .animation__bar {
     padding: 8px;
     margin-top: 16px;
-    background-color: #fafafa;
-    outline: 1px solid #e0e0e0;
+    background-color: var(--menu-background-color);
+    outline: 1px solid var(--menu-outline-color);
     border-radius: 8px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    box-shadow: 5px 5px 10px rgba(56, 56, 56, 1);
+    box-shadow: 5px 5px 10px var(--shadow-color);
 }
 
 .animation__load__button {
@@ -80,14 +88,14 @@
 .animation__player__bar {
     margin-top: 16px;
     padding: 8px;
-    background-color: #fafafa;
-    outline: 1px solid #e0e0e0;
+    background-color: var(--menu-background-color);
+    outline: 1px solid var(--menu-outline-color);
     border-radius: 8px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    box-shadow: 5px 5px 10px rgba(56, 56, 56, 1);
+    box-shadow: 5px 5px 10px var(--shadow-color);
 }
 
 .animation__toggle__button {    
@@ -123,8 +131,8 @@
 }
 
 .export__bar {
-    background-color: #fafafa;
-    outline: 1px solid #e0e0e0;
+    background-color: var(--menu-background-color);
+    outline: 1px solid var(--menu-outline-color);
     border-radius: 8px;
     margin-top: 16px;
     padding: 8px;
@@ -134,25 +142,25 @@
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    box-shadow: 5px 5px 10px rgba(56, 56, 56, 1);
+    box-shadow: 5px 5px 10px var(--shadow-color);
 }
 
 .export__button {
     width: 90%;
     height: 26px;
     text-align: center;
-    background: #f9f9f9;
-    border: 1px solid #999999;
+    background: var(--button-background-color);
+    border: 1px solid var(--button-border-color);
     border-radius: 3px;
     cursor: pointer;
 }
 
 .export__button:hover {
-    background: #e3e3e3;
+    background: var(--button-hover-color);
 }
 
 .export__button:active {
-    background: #999999;
+    background: var(--button-border-color);
 }
 
 .menu__title {
