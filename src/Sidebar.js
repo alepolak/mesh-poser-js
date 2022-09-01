@@ -34,7 +34,7 @@ const Sidebar = (props) => {
     const drawAnimationPlayerMenu = () => {
         if(props.hasAnimations) {
             return (
-                <div className='animation__inspector'>
+                <div className='animation__player__bar'>
                     <p className='menu__title'> FRAMES </p>
                     <div className='animation__frames'>
                         <button className='animation__toggle__button' onClick={props.onPauseContinue}>

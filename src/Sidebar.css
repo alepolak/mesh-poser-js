@@ -16,37 +16,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-}
-
-.model__load__button::-webkit-file-upload-button {
-    visibility: hidden;
-}
-
-.model__load__button::before {
-    width: 98%;
-    height: 24px;
-    line-height: 26px;
-    text-align: center;
-    content: 'Load model';
-    display: inline-block;
-    background: #f9f9f9;
-    border: 1px solid #999999;
-    border-radius: 3px;
-    -webkit-user-select: none;
-    cursor: pointer;
-}
-
-.model__load__button:hover::before {
-    background: #e3e3e3;
-}
-
-.model__load__button:active::before {
-    background: #999;
-}
-
-.model__load__button {
-    width: 90%;
-    height: 32px;
+    box-shadow: 5px 5px 10px rgba(56, 56, 56, 1);
 }
 
 .model__scale__menu {
@@ -86,6 +56,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    box-shadow: 5px 5px 10px rgba(56, 56, 56, 1);
 }
 
 .animation__load__button {
@@ -116,7 +87,7 @@
     height: 15px;
 }
 
-.animation__inspector {
+.animation__player__bar {
     margin-top: 16px;
     padding: 8px;
     background-color: #fafafa;
@@ -126,6 +97,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    box-shadow: 5px 5px 10px rgba(56, 56, 56, 1);
 }
 
 .animation__toggle__button {    
@@ -172,9 +144,25 @@
     flex-direction: row;
     align-items: center;
     justify-content: center;
+    box-shadow: 5px 5px 10px rgba(56, 56, 56, 1);
 }
 
 .export__button {
+    width: 90%;
+    height: 26px;
+    text-align: center;
+    background: #f9f9f9;
+    border: 1px solid #999999;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.export__button:hover {
+    background: #e3e3e3;
+}
+
+.export__button:active {
+    background: #999999;
 }
 
 .menu__title {
