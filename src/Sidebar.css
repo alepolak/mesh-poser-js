@@ -1,7 +1,7 @@
 .sidebar {
     position: fixed;
-    width: 160px;
-    left: 10px;
+    width: 10rem;
+    left: 1rem;
     top: 25%;
     --menu-background-color: #fafafa;
     --menu-outline-color: #e0e0e0;
@@ -13,9 +13,9 @@
 
 
 .model__bar {
-    padding: 8px;
+    padding: 0.5rem;
     background-color: var(--menu-background-color);
-    border-radius: 8px;
+    border-radius: 0.5rem;
     outline: 1px solid var(--menu-outline-color);
     display: flex;
     flex-direction: column;
@@ -37,21 +37,21 @@
 }
 
 .model__scale__input {
-    width: 70px;
-    height: 20px;
+    width: 4.375rem;
+    height: 1rem;
 }
 
 .animation__bar {
-    padding: 8px;
-    margin-top: 16px;
+    padding: 0.5rem;
+    margin-top: 1rem;
     background-color: var(--menu-background-color);
     outline: 1px solid var(--menu-outline-color);
-    border-radius: 8px;
+    border-radius: 0.5rem;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    box-shadow: 5px 5px 10px var(--shadow-color);
+    box-shadow: 0.5rem 0.5rem 1rem var(--shadow-color);
 }
 
 .animation__load__button {
@@ -60,17 +60,17 @@
 
 .animation__radios {
     width: 100%;
-    margin-top: 8px;
+    margin-top: 0.5rem;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     justify-content: center;
-    gap: 4px;
+    gap: 0.25rem;
 }
 
 .animation__play__radio {
     width: 90%;
-    line-height: 18px;
+    line-height: 1rem;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -78,26 +78,26 @@
 }
 
 .animation__play__button img {
-    width: 15px;
-    height: 15px;
+    width: 1rem;
+    height: 1rem;
 }
 
 .animation__player__bar {
-    margin-top: 16px;
-    padding: 8px;
+    margin-top: 1rem;
+    padding: 0.5rem;
     background-color: var(--menu-background-color);
     outline: 1px solid var(--menu-outline-color);
-    border-radius: 8px;
+    border-radius: 0.5rem;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    box-shadow: 5px 5px 10px var(--shadow-color);
+    box-shadow: 0.5rem 0.5rem 1rem var(--shadow-color);
 }
 
 .animation__toggle__button {    
-    width: 25px;
-    height: 25px;
+    width: 1.5rem;
+    height: 1.5rem;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -105,12 +105,12 @@
 }
 
 .animation__toggle__button img {
-    width: 20px;
-    height: 20px;
+    width: 1rem;
+    height: 1rem;
 }
 
 .animation__frames {
-    height: 32px;
+    height: 2rem;
     width: 90%;
     display: flex;
     flex-direction: row;
@@ -130,25 +130,25 @@
 .export__bar {
     background-color: var(--menu-background-color);
     outline: 1px solid var(--menu-outline-color);
-    border-radius: 8px;
-    margin-top: 16px;
-    padding: 8px;
-    height: 32px;
+    border-radius: 0.5rem;
+    margin-top: 1rem;
+    padding: 0.5rem;
+    height: 2rem;
     width: 90%;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    box-shadow: 5px 5px 10px var(--shadow-color);
+    box-shadow: 0.5rem 0.5rem 1rem var(--shadow-color);
 }
 
 .export__button {
     width: 90%;
-    height: 26px;
+    height: 2rem;
     text-align: center;
     background: var(--button-background-color);
     border: 1px solid var(--button-border-color);
-    border-radius: 3px;
+    border-radius: 0.25rem;
     cursor: pointer;
 }
 
@@ -161,8 +161,8 @@
 }
 
 .menu__title {
-    font-size: 12px;
-    line-height: 18px;
-    margin-top: 4px;
-    margin-bottom: 8px;
+    font-size: 0.75rem;
+    line-height: 1rem;
+    margin-top: 0.25rem;
+    margin-bottom: 0.5rem;
 }
