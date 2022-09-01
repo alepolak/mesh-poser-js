@@ -213,6 +213,7 @@ const Poser = () => {
         lastAction?.fadeOut(1);
         
         if(activeAction) {
+            setAnimationFrame(0);
             activeAction.reset();
             activeAction.paused = false;
             activeAction.fadeIn(1);
