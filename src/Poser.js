@@ -30,7 +30,7 @@ const Poser = () => {
     let [lastAction, setLastAction] = useState();
     let [animationFrame, setAnimationFrame] = useState(0);
     let [maxAnimationFrame, setMaxAnimationFrame] = useState(30);
-    let [singleStepMode, setSingleStepMode] = useState(false);
+    let [singleFrameMode, setSingleFrameMode] = useState(false);
     let [selectedAnimationIndex, setSelectedAnimationIndex] = useState();
 
     let [scene, setScene] = useState(new THREE.Scene());
@@ -38,7 +38,7 @@ const Poser = () => {
     useEffect(() => {
         if(!initialized && modelReady && animationMixer){
             setInitialized(true);
-            init(animationMixer);
+            initializeRender(animationMixer);
         }
 
         if(fbxModel && fbxModel !== fbxLastModel) {
@@ -84,7 +84,7 @@ const Poser = () => {
         }
     };
 
-    /** On File Change.
+    /** On Model Load.
      * 
      * Handles the loading of a new file from the computer.
      * @param {Event of loading a file} event 
@@ -122,6 +122,32 @@ const Poser = () => {
         reader.readAsArrayBuffer(event.target.files[0]);
     };
 
+    /** Update Model Scale.
+     * 
+     * Handles the scale of the model based on the original size.
+     */
+     const onUpdateScale = () => {  
+        setFbxScale(scaleRef.current.valueAsNumber / fbxOriginalScale);
+    };
+
+    /** On Scale Change
+     * 
+     * Updates the scale of the model based on the input value.
+     * @param {input component} input 
+     */
+    const onScaleChange = (input) => {
+        if(input.target.value > 0) {
+            onUpdateScale();
+        } else {
+            input.target.value = 1;
+        }
+    }
+
+    /** On Animation Load.
+     * 
+     * Handles the loading of animation files from the computer.
+     * @param {Event of loading a file} event 
+     */
     const onAnimationLoad = (event) => {
         
         if(event.target.files.length > 0) {
@@ -169,6 +195,7 @@ const Poser = () => {
         readFile(0);
     };
 
+    /* ERROR HANDLING */
     const onModelLoadingError = (error) => {
         onLoadingError(error);
     };
@@ -181,15 +208,30 @@ const Poser = () => {
         console.log(error);
     };
 
+    /** Loading progress
+     * 
+     * Handles the "progress bar" of loading something.
+     * @param {*} e 
+     */
     const onLoadingProgress = (e) => {
         console.log((e.loaded / e.total) * 100 + '% loaded');
     };
 
+    /** On Animation Selected
+     * 
+     * Set the selected animation and save the index.
+     * @param {animation index} i 
+     */
     const onAnimationSelected = (i) => {
         setSelectedAnimationIndex(i);
         setAction(animationActions[i]);
     };
 
+    /** Get Animation buttons
+     * 
+     * Create a radio button per every animation loaded.
+     * @returns a list of animation radio buttons.
+     */
     const getAnimationButtons = () => {
         return animationActions.map( function(animation, i){
             return (
@@ -201,14 +243,22 @@ const Poser = () => {
         }); 
     };
 
+    /** Set Active Action (animation)
+     * 
+     * @param {new action} toAction 
+     */
     const setAction = (toAction) => {
         if (toAction !== activeAction) {
-            setSingleStepMode(false);
+            setSingleFrameMode(false);
             setLastAction(activeAction);
             setActiveAction(toAction);
         }
     };
 
+    /** On Changed Animation
+     * 
+     * Handles the transition from one animation into the other.
+     */
     const onChangedAnimation = () => {
         lastAction?.fadeOut(1);
         
@@ -222,6 +272,11 @@ const Poser = () => {
         }
     };
 
+    /** Set Animation Frame Count
+     * 
+     * Set the amount of frames of the animation based on the duration of it. 
+     * @param {animation duration} time 
+     */
     const setAnimationFrameCount = (time) => {
 
         if(!time) {
@@ -234,21 +289,52 @@ const Poser = () => {
         }
     };
 
-    /** Update Model Scale.
+    /** On Animation Frame Change
      * 
+     * Set the animation on a specific frame based on the slider value.
+     * @param {slider component} slider 
      */
-    const onUpdateScale = () => {
-        
-        setFbxScale(scaleRef.current.valueAsNumber / fbxOriginalScale);
+    const onAnimationFrameChange = (slider) => {
+        var frame = slider.target.value;
+        setAnimationFrame(frame);
+        setSingleFrameMode(true);
+        activeAction?.play();
+        activeAction.paused = true;
+        activeAction.time = frame / ANIMATION_FRAME_RATE;
+        animationMixer.update(0.1);
     };
 
-    const onScaleChange = (e) => {
-        if(e.target.value > 0) {
-            onUpdateScale();
-        } else {
-            e.target.value = 1;
+    /** On Pause Continue
+     * 
+     * Toggles between animation play loop and single frame mode.
+     */
+    const onPauseContinue = () => {
+        if (singleFrameMode) {
+            setSingleFrameMode(false);
+            unPauseAllActions();
+        } else {     
+            setSingleFrameMode(true);
+            pauseAllActions();
         }
-    }
+    };
+
+    /** Pause All Actions
+     * 
+     */
+    const pauseAllActions = () => {
+        animationActions.forEach( function ( action ) {
+            action.paused = true;
+        } );
+    };
+
+    /** Unpause All Actions
+     * 
+     */
+    const unPauseAllActions = () => {
+        animationActions.forEach( function ( action ) {
+            action.paused = false;
+        } );
+    };
 
     /** Bake animation.
      * 
@@ -258,7 +344,7 @@ const Poser = () => {
         scene.traverse( function ( object ) {
             if ( !object.isSkinnedMesh ) return;
             if ( object.geometry.isBufferGeometry !== true ) throw new Error( 'Only BufferGeometry supported.' );
-            SaveFile(object);
+            saveFile(object);
         });
     };
 
@@ -267,46 +353,20 @@ const Poser = () => {
      * Save a mesh as an STL file.
      * @param {mesh to export as an STL} mesh 
      */
-    const SaveFile = (mesh) => {
+    const saveFile = (mesh) => {
         var exporter = new STLExporter();
         var str = exporter.parse( mesh, { binary: true } ); // Export the scene
         var blob = new Blob( [str], { type : 'text/plain' } ); // Generate Blob from the string
         saveAs( blob, `${modelName}.stl` ); //Save the Blob to file.stl
     };
 
-    const onAnimationFrameChange = (e) => {
-        var frame = e.target.value;
-        setAnimationFrame(frame);
-        setSingleStepMode(true);
-        activeAction?.play();
-        activeAction.paused = true;
-        activeAction.time = frame / ANIMATION_FRAME_RATE;
-        animationMixer.update(0.1);
-    };
 
-    const onPauseContinue = () => {
-        if (singleStepMode) {
-            setSingleStepMode(false);
-            unPauseAllActions();
-        } else {     
-            setSingleStepMode(true);
-            pauseAllActions();
-        }
-    };
-
-    const pauseAllActions = () => {
-        animationActions.forEach( function ( action ) {
-            action.paused = true;
-        } );
-    };
-
-    const unPauseAllActions = () => {
-        animationActions.forEach( function ( action ) {
-            action.paused = false;
-        } );
-    };
-
-    const init = (animationMixer) => {
+    /** Initialize Render
+     * 
+     * Initialize the 3D renderer with all the components inside (camera, lighting, etc).
+     * @param {animation mixer} animationMixer 
+     */
+    const initializeRender = (animationMixer) => {
         // attributes
         let camera, controls;
         const renderer = new THREE.WebGLRenderer();
@@ -403,7 +463,7 @@ const Poser = () => {
                 onPauseContinue={onPauseContinue}
                 onScaleChange={onScaleChange}
                 scaleRef={scaleRef}
-                singleStepMode={singleStepMode}
+                singleStepMode={singleFrameMode}
             />
             <div className='renderer' ref={container}></div>
         </div>
