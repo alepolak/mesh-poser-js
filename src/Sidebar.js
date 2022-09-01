@@ -5,6 +5,18 @@ import FileButton from './FileButton';
 
 const Sidebar = (props) => {
 
+    const drawScaleMenu = () => {
+        return (
+            <div className='model__scale__menu'>
+                <p className='model__scale__label'>Scale:</p>
+                <input className='model__scale__input' ref={props.scaleRef} type="number" />
+                <button className='model__scale__update__button' onClick={props.onUpdateScale}>
+                    <img src={icons.scale} alt='Scale model'/>
+                </button>
+            </div>
+        );
+    };
+
     /**
      *  Animation Menu
      * 
@@ -75,12 +87,7 @@ const Sidebar = (props) => {
                     onModelLoad={props.onModelLoad}
                     isMultiple={false}
                 />
-                <div className='model__scale__menu'>
-                    <input className='model__scale__input' ref={props.scaleRef} type="number" />
-                    <button className='model__scale__update__button' onClick={props.onUpdateScale}>
-                        <img src={icons.scale} alt='Scale model'/>
-                    </button>
-                </div>
+                {drawScaleMenu()}
             </div>
             {drawAnimationMenu()}
             {drawAnimationPlayerMenu()}
