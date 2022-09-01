@@ -18,6 +18,32 @@
     justify-content: center;
 }
 
+.model__load__button::-webkit-file-upload-button {
+    visibility: hidden;
+}
+
+.model__load__button::before {
+    width: 98%;
+    height: 24px;
+    line-height: 26px;
+    text-align: center;
+    content: 'Load model';
+    display: inline-block;
+    background: #f9f9f9;
+    border: 1px solid #999999;
+    border-radius: 3px;
+    -webkit-user-select: none;
+    cursor: pointer;
+}
+
+.model__load__button:hover::before {
+    background: #e3e3e3;
+}
+
+.model__load__button:active::before {
+    background: #999;
+}
+
 .model__load__button {
     width: 90%;
     height: 32px;
