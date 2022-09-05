@@ -343,33 +343,26 @@ const Poser = () => {
      * 
      * Bake the skinned mesh of the model.
      */
-    function bake() {
-        let meshes = [];
-
-        scene.traverse( function ( object ) {
-            if ( !object.isSkinnedMesh ) return;
-            if ( object.geometry.isBufferGeometry !== true ) throw new Error( 'Only BufferGeometry supported.' );
-            meshes.push(getPosedMesh(object));
-        });
-
-        const finalMesh = mergeMesh(meshes);
-        saveFile(finalMesh);
-    };
-
-    const mergeMesh = (meshes) => {
+    const bake = () => {
         const loader = new STLLoader();
-        let newMeshes = [];
+        let posedMeshList = [];
         let geom;
 
-        // Parse all the STL data into meshes
-        for (let index = 0; index < meshes.length; index++) {
-            const element = meshes[index];
-            const mesh = loader.parse(element.buffer);
-            newMeshes.push(mesh); 
-        }
+        scene.traverse( function ( mesh ) {
+            if ( !mesh.isSkinnedMesh ) 
+                return;
 
+            if ( mesh.geometry.isBufferGeometry !== true ) 
+                throw new Error( 'Only BufferGeometry supported.' );
+            
+            const posedObject = getPosedMesh(mesh);
+            const posedMesh = loader.parse(posedObject.buffer);
+            posedMeshList.push(posedMesh); 
+        });
+
+        
         // Join all the meshes together
-        geom = mergeBufferGeometries(newMeshes);
+        geom = mergeBufferGeometries(posedMeshList);
         geom.computeBoundingBox();
 
         // Creates the final mesh
@@ -378,7 +371,7 @@ const Poser = () => {
                 new THREE.MeshBasicMaterial({ color: 0xd3d3d3d3 })
         );
 
-        return finalMesh;
+        saveFile(finalMesh);
     };
 
     /** SaveFile.
