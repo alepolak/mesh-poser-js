@@ -1,0 +1,189 @@
+newmtl __hair_part6_0_2_0_0
+Ka 0.000000 0.000000 0.000000
+Kd 0.698039 0.698039 0.698039
+Ks 0.000000 0.000000 0.000000
+d 1.000000
+illum 2
+Ns 9.84916
+map_Kd Ellie_Hair-Flying_D-cut.png
+
+newmtl _2_hairband_0_1_62_62
+Ka 0.000000 0.000000 0.000000
+Kd 0.698039 0.698039 0.698039
+Ks 0.000000 0.000000 0.000000
+d 1.000000
+illum 2
+Ns 9.84916
+map_Kd Ellie_HairBand_D.png
+map_Ks Ellie_HairBand_S.png
+
+newmtl __hair_part1_0_2_0_0
+Ka 0.000000 0.000000 0.000000
+Kd 0.698039 0.698039 0.698039
+Ks 0.000000 0.000000 0.000000
+d 1.000000
+illum 2
+Ns 9.84916
+map_Kd Ellie_Hair-Thin_D-cut.png
+
+newmtl __hair_part2_0_2_0_0
+Ka 0.000000 0.000000 0.000000
+Kd 0.698039 0.698039 0.698039
+Ks 0.000000 0.000000 0.000000
+d 1.000000
+illum 2
+Ns 9.84916
+map_Kd Ellie_Hair-Thick_D-cut.png
+
+newmtl _4__bandageL_0_15_0_0
+Ka 0.000000 0.000000 0.000000
+Kd 0.698039 0.698039 0.698039
+Ks 0.000000 0.000000 0.000000
+d 1.000000
+illum 2
+Ns 9.84916
+map_Kd Bandage_Forearm_D.png
+map_Ks Bandage_Forearm_S.png
+map_Kn Bandage_Forearm_N.png
+
+newmtl _4__bracelet_part2_0_65_0_0
+Ka 0.000000 0.000000 0.000000
+Kd 0.698039 0.698039 0.698039
+Ks 0.000000 0.000000 0.000000
+d 1.000000
+illum 2
+Ns 9.84916
+map_Kd Dina_Bracelet-Gem_D-re.png
+
+newmtl _4__bracelet_part1_0_5_0_0
+Ka 0.000000 0.000000 0.000000
+Kd 0.698039 0.698039 0.698039
+Ks 0.000000 0.000000 0.000000
+d 1.000000
+illum 2
+Ns 9.84916
+map_Kd Dina_Bracelet_D.png
+map_Ks Dina_Bracelet_S.png
+map_Kn Dina_Bracelet_N.png
+
+newmtl _4__holster_0_5_0_0
+Ka 0.000000 0.000000 0.000000
+Kd 0.698039 0.698039 0.698039
+Ks 0.000000 0.000000 0.000000
+d 1.000000
+illum 2
+Ns 9.84916
+map_Kd Ellie_Holster_D.png
+map_Ks Ellie_Holster_S.png
+map_Kn Ellie_Holster_N.png
+
+newmtl __pants_part2_0_1_0_0
+Ka 0.000000 0.000000 0.000000
+Kd 0.698039 0.698039 0.698039
+Ks 0.000000 0.000000 0.000000
+d 1.000000
+illum 2
+Ns 9.84916
+map_Kd Ellie_Shirt-Skein_D-cut.png
+
+newmtl _2_tshirt_0_1_300_300
+Ka 0.000000 0.000000 0.000000
+Kd 0.698039 0.698039 0.698039
+Ks 0.000000 0.000000 0.000000
+d 1.000000
+illum 2
+Ns 9.84916
+map_Kd Ellie_DenimShirt-Tuck_D.png
+map_Ks Ellie_DenimShirt-Tuck_S.png
+map_Kn Ellie_DenimShirt-Tuck_N.png
+
+newmtl _2_pants_part1_0_1_80_80
+Ka 0.000000 0.000000 0.000000
+Kd 0.698039 0.698039 0.698039
+Ks 0.000000 0.000000 0.000000
+d 1.000000
+illum 2
+Ns 9.84916
+map_Kd Ellie_Pants_D.png
+map_Ks Ellie_Pants_S.png
+map_Kn Ellie_Pants_N.png
+
+newmtl _4_shoes_0_3_0_0
+Ka 0.000000 0.000000 0.000000
+Kd 0.698039 0.698039 0.698039
+Ks 0.000000 0.000000 0.000000
+d 1.000000
+illum 2
+Ns 9.84916
+map_Kd Ellie_Shoes_D.png
+map_Ks Ellie_Shoes_S.png
+map_Kn Ellie_Shoes_N.png
+
+newmtl _4_arms_L_0_2_0_0
+Ka 0.000000 0.000000 0.000000
+Kd 0.698039 0.698039 0.698039
+Ks 0.000000 0.000000 0.000000
+d 1.000000
+illum 2
+Ns 9.84916
+map_Kd Ellie_Arms_D.png
+map_Ks Ellie_Arms_S.png
+
+newmtl _4_mouth_0_45_0_0
+Ka 0.000000 0.000000 0.000000
+Kd 0.698039 0.698039 0.698039
+Ks 0.000000 0.000000 0.000000
+d 1.000000
+illum 2
+Ns 9.84916
+map_Kd Ellie_Teeth_D.png
+map_Ks Ellie_Teeth_S.png
+map_Kn Ellie_Teeth_N.png
+
+newmtl _4_head_part1_0_2_0_0
+Ka 0.000000 0.000000 0.000000
+Kd 0.698039 0.698039 0.698039
+Ks 0.000000 0.000000 0.000000
+d 1.000000
+illum 2
+Ns 9.84916
+map_Kd Ellie_Head_D.png
+map_Ks Ellie_Head_S.png
+
+newmtl _5_eyelashes_0_2_0_0
+Ka 0.000000 0.000000 0.000000
+Kd 0.698039 0.698039 0.698039
+Ks 0.000000 0.000000 0.000000
+d 1.000000
+illum 2
+Ns 9.84916
+map_Kd Ellie_Eyelash_D-cut.png
+
+newmtl _0_eyes_0_8_0_0
+Ka 0.000000 0.000000 0.000000
+Kd 0.698039 0.698039 0.698039
+Ks 0.000000 0.000000 0.000000
+d 1.000000
+illum 2
+Ns 9.84916
+map_Kd Ellie_Eye_D-re.png
+
+newmtl __caruncles_0_45_0_0
+Ka 0.000000 0.000000 0.000000
+Kd 0.698039 0.698039 0.698039
+Ks 0.000000 0.000000 0.000000
+d 1.000000
+illum 2
+Ns 9.84916
+map_Kd Ellie_Caruncle_D.png
+map_Kn Ellie_Caruncle_N.png
+
+newmtl _5_eyebrows_0_2_0_0
+Ka 0.000000 0.000000 0.000000
+Kd 0.698039 0.698039 0.698039
+Ks 0.000000 0.000000 0.000000
+d 1.000000
+illum 2
+Ns 9.84916
+map_Kd Ellie_Brow_D-cut.png
+

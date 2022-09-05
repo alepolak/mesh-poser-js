@@ -83,7 +83,7 @@ const Sidebar = (props) => {
         <div className='sidebar'>
             <div className='model__bar'>
                 <p className='menu__title'> MODEL </p>
-                <FileButton 
+                <FileButton
                     buttonLabel="Load model"
                     onModelLoad={props.onModelLoad}
                     isMultiple={false}
