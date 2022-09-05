@@ -36,6 +36,7 @@ const Poser = () => {
     let [selectedAnimationIndex, setSelectedAnimationIndex] = useState();
 
     let [scene, setScene] = useState(new THREE.Scene());
+    let [stlExporter, setStlExporter] = useState(new STLExporter());
 
     useEffect(() => {
         if(!initialized && modelReady && animationMixer){
@@ -376,9 +377,7 @@ const Poser = () => {
     };
 
     const getPosedMesh = (skinnedMesh) => {
-        var exporter = new STLExporter();
-        var str = exporter.parse( skinnedMesh, { binary: true } ); // Export the scene
-        var blob = new Blob( [str], { type : 'text/plain' } ); // Generate Blob from the string
+        var str = stlExporter.parse( skinnedMesh, { binary: true } ); // Export the scene
         return str;
     };
 
@@ -388,8 +387,7 @@ const Poser = () => {
      * @param {mesh to export as an STL} mesh 
      */
     const saveFile = (mesh) => {
-        var exporter = new STLExporter();
-        var str = exporter.parse( mesh, { binary: true } ); // Export the scene
+        var str = stlExporter.parse( mesh, { binary: true } ); // Export the scene
         var blob = new Blob( [str], { type : 'text/plain' } ); // Generate Blob from the string
         saveAs( blob, `${modelName}.stl` ); //Save the Blob to file.stl
     };
