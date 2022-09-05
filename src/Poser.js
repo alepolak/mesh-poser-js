@@ -387,7 +387,7 @@ const Poser = () => {
      * @param {mesh to export as an STL} mesh 
      */
     const saveFile = (mesh) => {
-        var str = stlExporter.parse( mesh, { binary: true } ); // Export the scene
+        var str = getPosedMesh(mesh);
         var blob = new Blob( [str], { type : 'text/plain' } ); // Generate Blob from the string
         saveAs( blob, `${modelName}.stl` ); //Save the Blob to file.stl
     };
