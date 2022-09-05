@@ -4,6 +4,8 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import { saveAs } from 'file-saver';
 import { STLExporter } from './STLExporter';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
+import { STLLoader } from 'three/examples/jsm/loaders/STLLoader'
+import { mergeBufferGeometries} from 'three/examples/jsm/utils/BufferGeometryUtils';
 import './Poser.css';
 import Sidebar from './Sidebar';
 
@@ -341,11 +343,43 @@ const Poser = () => {
      * Bake the skinned mesh of the model.
      */
     function bake() {
+        let meshes = [];
+
         scene.traverse( function ( object ) {
             if ( !object.isSkinnedMesh ) return;
             if ( object.geometry.isBufferGeometry !== true ) throw new Error( 'Only BufferGeometry supported.' );
-            saveFile(object);
+            meshes.push(getPosedMesh(object));
         });
+
+        const finalMesh = mergeMesh(meshes);
+        saveFile(finalMesh);
+    };
+
+    const mergeMesh = (meshes) => {
+        const loader = new STLLoader();
+        let newMeshes = [];
+        for (let index = 0; index < meshes.length; index++) {
+            const element = meshes[index];
+            const object = loader.parse(element.buffer);
+            newMeshes.push(object); 
+        }
+
+        let geom;
+        geom = mergeBufferGeometries(newMeshes);
+        geom.computeBoundingBox();
+        var meshh = new THREE.Mesh(
+                geom,
+                new THREE.MeshBasicMaterial({ color: 0xd3d3d3d3 })
+        );
+
+        return meshh;
+    };
+
+    const getPosedMesh = (skinnedMesh) => {
+        var exporter = new STLExporter();
+        var str = exporter.parse( skinnedMesh, { binary: true } ); // Export the scene
+        var blob = new Blob( [str], { type : 'text/plain' } ); // Generate Blob from the string
+        return str;
     };
 
     /** SaveFile.
