@@ -376,11 +376,6 @@ const Poser = () => {
         return meshh;
     };
 
-    const getPosedMesh = (skinnedMesh) => {
-        var str = stlExporter.parse( skinnedMesh, { binary: true } ); // Export the scene
-        return str;
-    };
-
     /** SaveFile.
      * 
      * Save a mesh as an STL file.
@@ -390,6 +385,17 @@ const Poser = () => {
         var str = getPosedMesh(mesh);
         var blob = new Blob( [str], { type : 'text/plain' } ); // Generate Blob from the string
         saveAs( blob, `${modelName}.stl` ); //Save the Blob to file.stl
+    };
+
+    /** Get Posed Mesh
+     * 
+     * Uses the STLExporter to create a mesh of the model posed.
+     * @param {Sknned mesh} skinnedMesh 
+     * @returns 
+     */
+    const getPosedMesh = (skinnedMesh) => {
+        var posedMeshData = stlExporter.parse( skinnedMesh, { binary: true } ); // Export the scene
+        return posedMeshData;
     };
 
 
