@@ -110,11 +110,13 @@ const Poser = () => {
             setFbxOriginalScale(size.y);       
             setFbxScale(1 / fbxOriginalScale);
             scaleRef.current.value = size.y;
+            const defaultMaterial = new THREE.MeshStandardMaterial({ color: 0xa3a2a2, metalness: 0.1, flatShading: true });
 
             object.traverse( function ( o ) {
                 if(o.isMesh) {
-                    o.receiveShadow = true;
+                    o.material = defaultMaterial;
                     o.castShadow = true;
+                    o.receiveShadow = true;
                     setModelReady(true);
                 }
             });
