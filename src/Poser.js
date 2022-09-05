@@ -359,21 +359,26 @@ const Poser = () => {
     const mergeMesh = (meshes) => {
         const loader = new STLLoader();
         let newMeshes = [];
+        let geom;
+
+        // Parse all the STL data into meshes
         for (let index = 0; index < meshes.length; index++) {
             const element = meshes[index];
-            const object = loader.parse(element.buffer);
-            newMeshes.push(object); 
+            const mesh = loader.parse(element.buffer);
+            newMeshes.push(mesh); 
         }
 
-        let geom;
+        // Join all the meshes together
         geom = mergeBufferGeometries(newMeshes);
         geom.computeBoundingBox();
-        var meshh = new THREE.Mesh(
+
+        // Creates the final mesh
+        var finalMesh = new THREE.Mesh(
                 geom,
                 new THREE.MeshBasicMaterial({ color: 0xd3d3d3d3 })
         );
 
-        return meshh;
+        return finalMesh;
     };
 
     /** SaveFile.
