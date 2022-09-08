@@ -12,24 +12,24 @@ class Composer extends Component {
         this.state = {
             references: {
                 rendererContainer: React.createRef(),
-                scaleRef: React.createRef(),
+                scaleInput: React.createRef(),
             },
             model: {
+                isReady: false,
+                lastMesh: undefined,
                 modelName: undefined,
                 mesh: undefined,
-                lastMesh: undefined,
-                scale: undefined,
                 originalScale: undefined,
-                isReady: false,
+                scale: undefined,
             },
             animations: {
-                mixer: undefined,
-                list: [],
-                activeIndex: undefined,
                 active: undefined,
-                last: undefined,
                 activeFrame: undefined,
+                activeIndex: undefined,
                 activeMaxFrame: undefined,
+                last: undefined,
+                list: [],
+                mixer: undefined,
                 singleFrameModeActive: false,
             },
             renderer: {
@@ -73,7 +73,7 @@ class Composer extends Component {
                     active: animationAction,
                     list: [animationAction],
                 },
-            })
+            });
         }
     };
 
@@ -83,35 +83,57 @@ class Composer extends Component {
      * @param {Event of loading a file} event 
      */
     onModelLoad = (event) => {
-        setModelName(event.currentTarget.files[0].name.split('.')[0]);
-        scene.remove(fbxModel);
         const reader = new FileReader();  
+        
+        // Remove old model from scene.
+        this.state.renderer.scene.remove(this.state.model.mesh);
+        
+        // Save model name.
+        this.setState({
+            model: {
+                modelName: event.currentTarget.files[0].name.split('.')[0]
+            },
+        });
+        
+        // Set Events.
         reader.addEventListener('progress', onLoadingProgress);
         reader.addEventListener('error', onModelLoadingError);
         reader.addEventListener("load", function(event) {
 
-            const contents = event.target.result;
-        
-            const loader = new FBXLoader();
-            const object = loader.parse(contents);
-            
-            setDefaultAnimation(object);
-            const size = getObjectSize(object);
-            setFbxOriginalScale(size.y);       
-            setFbxScale(1 / fbxOriginalScale);
-            scaleRef.current.value = size.y;
             const defaultMaterial = new THREE.MeshStandardMaterial({ color: 0xa3a2a2, metalness: 0.1, flatShading: true });
+            const contents = event.target.result;
+            const loader = new FBXLoader();
+            let modelReady = false;
 
+            // Parse model
+            const object = loader.parse(contents);
+            const size = getObjectSize(object);
+
+            // Set object default animation
+            setDefaultAnimation(object);
+
+            // Change scale input value
+            this.state.references.scaleInput.current.value = size.y;
+            
+            // Setup the mesh
             object.traverse( function ( o ) {
                 if(o.isMesh) {
                     o.material = defaultMaterial;
                     o.castShadow = true;
                     o.receiveShadow = true;
-                    setModelReady(true);
+                    modelReady = true;
                 }
             });
-            
-            setFbxModel(object);
+
+            // Save the scale, mesh and modelReady
+            this.setState({
+                model: {
+                    isReady: modelReady,
+                    mesh: object,
+                    originalScale: size.y,
+                    scale: 1 / size.y,
+                }
+            });
         });
         
         reader.readAsArrayBuffer(event.target.files[0]);
