@@ -267,10 +267,10 @@ class Composer extends Component {
      * @returns a list of animation radio buttons.
      */
     getAnimationButtons = () => {
-        return animationActions.map( function(animation, i){
+        return this.state.animations.list.map( function(animation, i){
             return (
                 <label className='animation__play__radio' key={i}>
-                    <input type="radio" value="option1" onChange={() => {onAnimationSelected(i)}} checked={selectedAnimationIndex === i} />
+                    <input type="radio" value="option1" onChange={() => {onAnimationSelected(i)}} checked={this.state.animations.activeIndex === i} />
                     Animation {i} 
                 </label>
             )
