@@ -212,7 +212,7 @@ class Composer extends Component {
     readMultipleFiles = (reader, files) => {
         const readFile = (index) => {
           if( index >= files.length ) {
-            setModelReady(true);
+            this.setState({ model: { isReady: true }});
             return;
           } 
           var file = files[index];
