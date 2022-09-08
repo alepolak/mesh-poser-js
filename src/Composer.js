@@ -41,10 +41,462 @@ class Composer extends Component {
         };
     };
 
+    /** Get Object Size
+     * 
+     * @param {model} object 
+     * @returns the size of the model. 
+     */
+    getObjectSize = (object) => {
+        let box3 = new THREE.Box3().setFromObject(object);
+        let size = new THREE.Vector3();
+        box3.getSize(size);
+        return size;
+    };
+
+    /** Set Default Animation.
+     * 
+     * Handles the assignment of the default animation of the object.
+     * @param {model} object 
+     */
+    setDefaultAnimation = (object) => {
+        var mix = new THREE.AnimationMixer(object);
+        this.setState({
+            animations: {
+                mixer: mix,
+            },
+        });
+
+        if(object.animations.length !== 0) {
+            const animationAction = this.state.animations.mixer.clipAction(object.animations[0]);
+            this.setState({
+                animations: {
+                    active: animationAction,
+                    list: [animationAction],
+                },
+            })
+        }
+    };
+
+    /** On Model Load.
+     * 
+     * Handles the loading of a new file from the computer.
+     * @param {Event of loading a file} event 
+     */
+    onModelLoad = (event) => {
+        setModelName(event.currentTarget.files[0].name.split('.')[0]);
+        scene.remove(fbxModel);
+        const reader = new FileReader();  
+        reader.addEventListener('progress', onLoadingProgress);
+        reader.addEventListener('error', onModelLoadingError);
+        reader.addEventListener("load", function(event) {
+
+            const contents = event.target.result;
+        
+            const loader = new FBXLoader();
+            const object = loader.parse(contents);
+            
+            setDefaultAnimation(object);
+            const size = getObjectSize(object);
+            setFbxOriginalScale(size.y);       
+            setFbxScale(1 / fbxOriginalScale);
+            scaleRef.current.value = size.y;
+            const defaultMaterial = new THREE.MeshStandardMaterial({ color: 0xa3a2a2, metalness: 0.1, flatShading: true });
+
+            object.traverse( function ( o ) {
+                if(o.isMesh) {
+                    o.material = defaultMaterial;
+                    o.castShadow = true;
+                    o.receiveShadow = true;
+                    setModelReady(true);
+                }
+            });
+            
+            setFbxModel(object);
+        });
+        
+        reader.readAsArrayBuffer(event.target.files[0]);
+    };
+
+    /** Update Model Scale.
+     * 
+     * Handles the scale of the model based on the original size.
+     */
+    onUpdateScale = () => {  
+        setFbxScale(scaleRef.current.valueAsNumber / fbxOriginalScale);
+    };
+
+    /** On Scale Change
+     * 
+     * Updates the scale of the model based on the input value.
+     * @param {input component} input 
+     */
+    onScaleChange = (input) => {
+        if(input.target.value > 0) {
+            onUpdateScale();
+        } else {
+            input.target.value = 1;
+        }
+    }
+
+    /** On Animation Load.
+     * 
+     * Handles the loading of animation files from the computer.
+     * @param {Event of loading a file} event 
+     */
+    onAnimationLoad = (event) => {
+        
+        if(event.target.files.length > 0) {
+            const reader = new FileReader();
+            reader.addEventListener('progress', onLoadingProgress);
+            reader.addEventListener('error', onAnimationLoadingError);
+            reader.addEventListener("load", function(e) {
+            
+                const contents = e.target.result;
+                
+                const loader = new FBXLoader();
+                const object = loader.parse(contents);
+                
+                object.traverse( function ( o ) {
+                    if(o.animations.length > 0) {
+                        const animationAction = animationMixer.clipAction(o.animations[0]);
+                        setAnimationActions(prevArray => [...prevArray, animationAction]);
+                    }
+                });
+            });
+            
+            readMultipleFiles(reader, event.target.files);
+        }
+    };
+
+    /** Read multiple files
+     * 
+     * Reads one or multiple files recieved.
+     * @param {File reader} reader 
+     * @param {Files trying to be loaded} files 
+     */
+    readMultipleFiles = (reader, files) => {
+        const readFile = (index) => {
+          if( index >= files.length ) {
+            setModelReady(true);
+            return;
+          } 
+          var file = files[index];
+          reader.onload = function(e) {
+            readFile(index+1);
+          }
+          reader.readAsArrayBuffer(file);
+        };
+        
+        readFile(0);
+    };
+
+    /* ERROR HANDLING */
+    onModelLoadingError = (error) => {
+        onLoadingError(error);
+    };
+
+    onAnimationLoadingError = (error) => {
+        onLoadingError(error);
+    };
+
+    onLoadingError = (error) => {
+        console.log(error);
+    };
+
+    /** Loading progress
+     * 
+     * Handles the "progress bar" of loading something.
+     * @param {*} e 
+     */
+    onLoadingProgress = (e) => {
+        console.log((e.loaded / e.total) * 100 + '% loaded');
+    };
+
+    /** On Animation Selected
+     * 
+     * Set the selected animation and save the index.
+     * @param {animation index} i 
+     */
+    onAnimationSelected = (i) => {
+        setSelectedAnimationIndex(i);
+        setAction(animationActions[i]);
+    };
+
+    /** Get Animation buttons
+     * 
+     * Create a radio button per every animation loaded.
+     * @returns a list of animation radio buttons.
+     */
+    getAnimationButtons = () => {
+        return animationActions.map( function(animation, i){
+            return (
+                <label className='animation__play__radio' key={i}>
+                    <input type="radio" value="option1" onChange={() => {onAnimationSelected(i)}} checked={selectedAnimationIndex === i} />
+                    Animation {i} 
+                </label>
+            )
+        }); 
+    };
+
+    /** Set Active Action (animation)
+     * 
+     * @param {new action} toAction 
+     */
+    setAction = (toAction) => {
+        if (toAction !== activeAction) {
+            setSingleFrameMode(false);
+            setLastAction(activeAction);
+            setActiveAction(toAction);
+        }
+    };
+
+    /** On Changed Animation
+     * 
+     * Handles the transition from one animation into the other.
+     */
+    onChangedAnimation = () => {
+        lastAction?.fadeOut(1);
+        
+        if(activeAction) {
+            setAnimationFrame(0);
+            activeAction.reset();
+            activeAction.paused = false;
+            activeAction.fadeIn(1);
+            activeAction.play();
+            setAnimationFrameCount(activeAction.getClip().duration);
+        }
+    };
+
+    /** Set Animation Frame Count
+     * 
+     * Set the amount of frames of the animation based on the duration of it. 
+     * @param {animation duration} time 
+     */
+    setAnimationFrameCount = (time) => {
+
+        if(!time) {
+            setMaxAnimationFrame(30);
+        } else {
+            var framesInAnimation = Math.round(time * ANIMATION_FRAME_RATE);
+            if(maxAnimationFrame != framesInAnimation) {
+                setMaxAnimationFrame(framesInAnimation === 0 ? 30 : framesInAnimation);
+            }
+        }
+    };
+
+    /** On Animation Frame Change
+     * 
+     * Set the animation on a specific frame based on the slider value.
+     * @param {slider component} slider 
+     */
+    onAnimationFrameChange = (slider) => {
+        var frame = slider.target.value;
+        setAnimationFrame(frame);
+        setSingleFrameMode(true);
+        activeAction?.play();
+        activeAction.paused = true;
+        activeAction.time = frame / ANIMATION_FRAME_RATE;
+        animationMixer.update(0.1);
+    };
+
+    /** On Pause Continue
+     * 
+     * Toggles between animation play loop and single frame mode.
+     */
+    onPauseContinue = () => {
+        if (singleFrameMode) {
+            setSingleFrameMode(false);
+            unPauseAllActions();
+        } else {     
+            setSingleFrameMode(true);
+            pauseAllActions();
+        }
+    };
+
+    /** Pause All Actions
+     * 
+     */
+    pauseAllActions = () => {
+        animationActions.forEach( function ( action ) {
+            action.paused = true;
+        } );
+    };
+
+    /** Unpause All Actions
+     * 
+     */
+    unPauseAllActions = () => {
+        animationActions.forEach( function ( action ) {
+            action.paused = false;
+        } );
+    };
+
+    /** Bake animation.
+     * 
+     * Bake the skinned mesh of the model.
+     */
+    bake = () => {
+        const loader = new STLLoader();
+        let posedMeshList = [];
+        let geom;
+
+        scene.traverse( function ( mesh ) {
+            if ( !mesh.isSkinnedMesh ) 
+                return;
+
+            if ( mesh.geometry.isBufferGeometry !== true ) 
+                throw new Error( 'Only BufferGeometry supported.' );
+            
+            const posedObject = getPosedMesh(mesh);
+            const posedMesh = loader.parse(posedObject.buffer);
+            posedMeshList.push(posedMesh); 
+        });
+
+        
+        // Join all the meshes together
+        geom = mergeBufferGeometries(posedMeshList);
+        geom.computeBoundingBox();
+
+        // Creates the final mesh
+        var finalMesh = new THREE.Mesh(
+                geom,
+                new THREE.MeshBasicMaterial({ color: 0xd3d3d3d3 })
+        );
+
+        saveFile(finalMesh);
+    };
+
+    /** SaveFile.
+     * 
+     * Save a mesh as an STL file.
+     * @param {mesh to export as an STL} mesh 
+     */
+    saveFile = (mesh) => {
+        var str = getPosedMesh(mesh);
+        var blob = new Blob( [str], { type : 'text/plain' } ); // Generate Blob from the string
+        saveAs( blob, `${modelName}.stl` ); //Save the Blob to file.stl
+    };
+
+    /** Get Posed Mesh
+     * 
+     * Uses the STLExporter to create a mesh of the model posed.
+     * @param {Sknned mesh} skinnedMesh 
+     * @returns 
+     */
+    getPosedMesh = (skinnedMesh) => {
+        var posedMeshData = stlExporter.parse( skinnedMesh, { binary: true } ); // Export the scene
+        return posedMeshData;
+    };
+
+
+    /** Initialize Render
+     * 
+     * Initialize the 3D renderer with all the components inside (camera, lighting, etc).
+     * @param {animation mixer} animationMixer 
+     */
+    initializeRender = (animationMixer) => {
+        // attributes
+        let camera, controls;
+        const renderer = new THREE.WebGLRenderer();
+        const clock = new THREE.Clock();
+        THREE.Cache.enabled = true;
+
+        // Scene
+        scene.add(new THREE.AxesHelper(15))
+
+        // Background and fog
+        scene.background = new THREE.Color( 0x303030 );
+        scene.fog = new THREE.Fog( 0x303030, 10, 50 );
+
+        // Lights
+        const getHemiLight = () => {
+            const hemiLight = new THREE.HemisphereLight( 0xfafafa, 0xfce3a2, 0.5);
+            hemiLight.position.set( 0, 20, 0 );
+            return hemiLight;
+        };
+        
+        const getDirectLight = () => {
+            const dirLight = new THREE.DirectionalLight( 0xfafafa );
+            dirLight.position.set( - 3, 10, 10 );
+            dirLight.lookAt(0,1,0);
+            dirLight.castShadow = true;
+            dirLight.shadow.camera.top = 2;
+            dirLight.shadow.camera.bottom = - 2;
+            dirLight.shadow.camera.left = - 2;
+            dirLight.shadow.camera.right = 2;
+            dirLight.shadow.camera.near = 0.1;
+            dirLight.shadow.camera.far = 40;
+            return dirLight;
+        };
+
+        // Ground
+        const getGround = () => {
+            const mesh = new THREE.Mesh( new THREE.PlaneGeometry( 100, 100 ), new THREE.MeshPhongMaterial( { color: 0x575757, depthWrite: false } ) );
+            mesh.rotation.x = - Math.PI / 2;
+            mesh.receiveShadow = true;
+            return mesh;
+        };
+
+        // Camera
+        const getCamera = () => {
+            var camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 1000 );
+            camera.position.set( 1, 2, 3 );
+            camera.lookAt( 0, 1, 0 );
+            return camera;
+        };
+
+        // Render
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        container.current.innerHTML = '';
+        container.current.appendChild(renderer.domElement);
+
+        // Camera
+        camera = getCamera();
+        controls = new OrbitControls(camera, renderer.domElement);
+
+        // Controls
+        controls.enableDamping = true
+        controls.target.set(0, 1, 0)
+    
+        // Compose scene
+        scene.add(getGround());
+        scene.add(getHemiLight());
+        scene.add(getDirectLight());
+    
+        function animate() {
+            requestAnimationFrame(animate);
+        
+            controls.update();
+        
+            animationMixer.update(clock.getDelta());
+        
+            renderer.render(scene, camera);
+        };
+        
+        animate();
+    };
+
     render() {
         return(
-            <div className="asd"> hola</div>
-        )
+            <div className='app'>
+                <Sidebar 
+                    animationFrame={animationFrame}
+                    bake={bake}
+                    getAnimationButtons={getAnimationButtons}
+                    hasAnimations={animationActions.length > 1}
+                    maxAnimationFrame={maxAnimationFrame}
+                    modelReady={modelReady}
+                    onAnimationLoad={onAnimationLoad}
+                    onAnimationFrameChange={onAnimationFrameChange}
+                    onModelLoad={onModelLoad}
+                    onPauseContinue={onPauseContinue}
+                    onScaleChange={onScaleChange}
+                    scaleRef={scaleRef}
+                    singleStepMode={singleFrameMode}
+                />
+                <div className='renderer' ref={container}></div>
+            </div>
+        );
     }
 };
 
