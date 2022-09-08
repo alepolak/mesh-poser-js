@@ -253,8 +253,12 @@ class Composer extends Component {
      * @param {animation index} i 
      */
     onAnimationSelected = (i) => {
-        setSelectedAnimationIndex(i);
-        setAction(animationActions[i]);
+        this.setState({
+            animations: {
+                active: this.state.animations.list[i],
+                activeIndex: i,
+            },
+        });
     };
 
     /** Get Animation buttons
