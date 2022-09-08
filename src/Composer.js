@@ -174,19 +174,27 @@ class Composer extends Component {
         
         if(event.target.files.length > 0) {
             const reader = new FileReader();
+
+            // Set Events.
             reader.addEventListener('progress', onLoadingProgress);
             reader.addEventListener('error', onAnimationLoadingError);
-            reader.addEventListener("load", function(e) {
+            reader.addEventListener("load", function(event) {
             
-                const contents = e.target.result;
-                
+                const contents = event.target.result;   
                 const loader = new FBXLoader();
+
+                // Parse model
                 const object = loader.parse(contents);
                 
+                // Save animations in model
                 object.traverse( function ( o ) {
                     if(o.animations.length > 0) {
-                        const animationAction = animationMixer.clipAction(o.animations[0]);
-                        setAnimationActions(prevArray => [...prevArray, animationAction]);
+                        const newAnimation = this.state.animations.mixer.clipAction(o.animations[0]);
+                        this.setState({
+                            animations: {
+                                list: [...this.state.animations.list, newAnimation]
+                            },
+                        });
                     }
                 });
             });
