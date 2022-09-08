@@ -144,7 +144,12 @@ class Composer extends Component {
      * Handles the scale of the model based on the original size.
      */
     onUpdateScale = () => {  
-        setFbxScale(scaleRef.current.valueAsNumber / fbxOriginalScale);
+        const newScale = this.state.references.scaleInput.current.valueAsNumber / this.state.model.originalScale;
+        this.setState({
+            model: {
+                scale: newScale,
+            },
+        });
     };
 
     /** On Scale Change
