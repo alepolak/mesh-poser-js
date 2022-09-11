@@ -432,9 +432,10 @@ class Composer extends Component {
     bake = () => {
         const loader = new STLLoader();
         let posedMeshList = [];
-        let geom;
+        let geometries;
 
-        scene.traverse( function ( mesh ) {
+        // Traverse the scene to find the models
+        this.state.renderer.scene.traverse( function ( mesh ) {
             if ( !mesh.isSkinnedMesh ) 
                 return;
 
@@ -448,12 +449,12 @@ class Composer extends Component {
 
         
         // Join all the meshes together
-        geom = mergeBufferGeometries(posedMeshList);
-        geom.computeBoundingBox();
+        geometries = mergeBufferGeometries(posedMeshList);
+        geometries.computeBoundingBox();
 
         // Creates the final mesh
         var finalMesh = new THREE.Mesh(
-                geom,
+                geometries,
                 new THREE.MeshBasicMaterial({ color: 0xd3d3d3d3 })
         );
 
