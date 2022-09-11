@@ -319,15 +319,22 @@ class Composer extends Component {
      * Handles the transition from one animation into the other.
      */
     onChangedAnimation = () => {
-        lastAction?.fadeOut(1);
+        this.state.animations.last?.fadeOut(1);
         
         if(activeAction) {
-            setAnimationFrame(0);
-            activeAction.reset();
-            activeAction.paused = false;
-            activeAction.fadeIn(1);
-            activeAction.play();
-            setAnimationFrameCount(activeAction.getClip().duration);
+            this.state.animations.active.reset();
+            this.state.animations.active.fadeIn(1);
+            this.state.animations.active.play();
+            this.state.animations.active.paused = false;
+
+            this.setState(prevState => ({
+                ...prevState,
+                animations: {
+                    ...prevState.animations,
+                    activeFrame: 0,
+                    activeMaxFrame: this.state.animations.active.getClip().duration,
+                }
+            }));
         }
     };
 
