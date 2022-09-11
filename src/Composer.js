@@ -411,8 +411,8 @@ class Composer extends Component {
      * 
      */
     pauseAllActions = () => {
-        animationActions.forEach( function ( action ) {
-            action.paused = true;
+        this.state.animations.list.forEach( function ( animation ) {
+            animation.paused = true;
         } );
     };
 
