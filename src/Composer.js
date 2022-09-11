@@ -371,12 +371,20 @@ class Composer extends Component {
      */
     onAnimationFrameChange = (slider) => {
         var frame = slider.target.value;
-        setAnimationFrame(frame);
-        setSingleFrameMode(true);
-        activeAction?.play();
-        activeAction.paused = true;
-        activeAction.time = frame / ANIMATION_FRAME_RATE;
-        animationMixer.update(0.1);
+
+        this.setState(prevState => ({
+            ...prevState,
+            animations: {
+                ...prevState.animations,
+                activeFrame: frame,
+                singleFrameModeActive: true,
+            }
+        }));
+
+        this.state.animations.active?.play();
+        this.state.animations.active.paused = true;
+        this.state.animations.active.time = frame / ANIMATION_FRAME_RATE;
+        this.state.animations.mixer.update(0.1);
     };
 
     /** On Pause Continue
