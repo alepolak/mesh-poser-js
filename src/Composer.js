@@ -3,7 +3,10 @@ import './Composer.css';
 import Sidebar from "./Sidebar";
 import * as THREE from 'three';
 import { STLExporter } from "./STLExporter";
-import {ANIMATION_FRAME_RATE} from "./const"
+import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
+import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { ANIMATION_FRAME_RATE } from "./const";
 
 class Composer extends Component {
 
@@ -103,8 +106,8 @@ class Composer extends Component {
         }));
         
         // Set Events.
-        reader.addEventListener('progress', onLoadingProgress);
-        reader.addEventListener('error', onModelLoadingError);
+        reader.addEventListener('progress', this.onLoadingProgress);
+        reader.addEventListener('error', this.onModelLoadingError);
         reader.addEventListener("load", function(event) {
 
             const defaultMaterial = new THREE.MeshStandardMaterial({ color: 0xa3a2a2, metalness: 0.1, flatShading: true });
@@ -114,10 +117,10 @@ class Composer extends Component {
 
             // Parse model
             const object = loader.parse(contents);
-            const size = getObjectSize(object);
+            const size = this.getObjectSize(object);
 
             // Set object default animation
-            setDefaultAnimation(object);
+            this.setDefaultAnimation(object);
 
             // Change scale input value
             this.state.references.scaleInput.current.value = size.y;
@@ -170,7 +173,7 @@ class Composer extends Component {
      */
     onScaleChange = (input) => {
         if(input.target.value > 0) {
-            onUpdateScale();
+            this.onUpdateScale();
         } else {
             input.target.value = 1;
         }
@@ -187,8 +190,8 @@ class Composer extends Component {
             const reader = new FileReader();
 
             // Set Events.
-            reader.addEventListener('progress', onLoadingProgress);
-            reader.addEventListener('error', onAnimationLoadingError);
+            reader.addEventListener('progress', this.onLoadingProgress);
+            reader.addEventListener('error', this.onAnimationLoadingError);
             reader.addEventListener("load", function(event) {
             
                 const contents = event.target.result;   
@@ -212,7 +215,7 @@ class Composer extends Component {
                 });
             });
             
-            readMultipleFiles(reader, event.target.files);
+            this.readMultipleFiles(reader, event.target.files);
         }
     };
 
@@ -245,11 +248,11 @@ class Composer extends Component {
 
     /* ERROR HANDLING */
     onModelLoadingError = (error) => {
-        onLoadingError(error);
+        this.onLoadingError(error);
     };
 
     onAnimationLoadingError = (error) => {
-        onLoadingError(error);
+        this.onLoadingError(error);
     };
 
     onLoadingError = (error) => {
@@ -290,7 +293,7 @@ class Composer extends Component {
         return this.state.animations.list.map( function(animation, i){
             return (
                 <label className='animation__play__radio' key={i}>
-                    <input type="radio" value="option1" onChange={() => {onAnimationSelected(i)}} checked={this.state.animations.activeIndex === i} />
+                    <input type="radio" value="option1" onChange={() => {this.onAnimationSelected(i)}} checked={this.state.animations.activeIndex === i} />
                     Animation {i} 
                 </label>
             )
@@ -308,7 +311,7 @@ class Composer extends Component {
                 animations: {
                     ...prevState.animations,
                     active: toAction,
-                    last: activeAction,
+                    last: this.state.animations.active,
                     singleFrameModeActive: true,
                 },
             }));
@@ -322,7 +325,7 @@ class Composer extends Component {
     onChangedAnimation = () => {
         this.state.animations.last?.fadeOut(1);
         
-        if(activeAction) {
+        if(this.state.animations.active) {
             this.state.animations.active.reset();
             this.state.animations.active.fadeIn(1);
             this.state.animations.active.play();
@@ -392,17 +395,17 @@ class Composer extends Component {
      * Toggles between animation play loop and single frame mode.
      */
     onPauseContinue = () => {
-        if (singleFrameMode) {
-            unPauseAllActions();
+        if (this.state.animations.singleFrameModeActive) {
+            this.unPauseAllActions();
         } else {     
-            pauseAllActions();
+            this.pauseAllActions();
         }
 
         this.setState(prevState => ({
             ...prevState,
             animations: {
                 ...prevState.animations,
-                singleFrameModeActive: !singleFrameMode,
+                singleFrameModeActive: !this.state.animations.singleFrameModeActive,
             }
         }));
     };
@@ -442,14 +445,14 @@ class Composer extends Component {
             if ( mesh.geometry.isBufferGeometry !== true ) 
                 throw new Error( 'Only BufferGeometry supported.' );
             
-            const posedObject = getPosedMesh(mesh);
+            const posedObject = this.getPosedMesh(mesh);
             const posedMesh = loader.parse(posedObject.buffer);
             posedMeshList.push(posedMesh); 
         });
 
         
         // Join all the meshes together
-        geometries = mergeBufferGeometries(posedMeshList);
+        geometries = this.mergeBufferGeometries(posedMeshList);
         geometries.computeBoundingBox();
 
         // Creates the final mesh
@@ -458,7 +461,7 @@ class Composer extends Component {
                 new THREE.MeshBasicMaterial({ color: 0xd3d3d3d3 })
         );
 
-        saveFile(finalMesh);
+        this.saveFile(finalMesh);
     };
 
     /** SaveFile.
@@ -467,9 +470,9 @@ class Composer extends Component {
      * @param {mesh to export as an STL} mesh 
      */
     saveFile = (mesh) => {
-        var str = getPosedMesh(mesh);
+        var str = this.getPosedMesh(mesh);
         var blob = new Blob( [str], { type : 'text/plain' } ); // Generate Blob from the string
-        saveAs( blob, `${modelName}.stl` ); //Save the Blob to file.stl
+        this.saveAs( blob, `${this.state.model.modelName}.stl` ); //Save the Blob to file.stl
     };
 
     /** Get Posed Mesh
@@ -497,11 +500,11 @@ class Composer extends Component {
         THREE.Cache.enabled = true;
 
         // Scene
-        scene.add(new THREE.AxesHelper(15))
+        this.state.renderer.scene.add(new THREE.AxesHelper(15))
 
         // Background and fog
-        scene.background = new THREE.Color( 0x303030 );
-        scene.fog = new THREE.Fog( 0x303030, 10, 50 );
+        this.state.renderer.scene.background = new THREE.Color( 0x303030 );
+        this.state.renderer.scene.fog = new THREE.Fog( 0x303030, 10, 50 );
 
         // Lights
         const getHemiLight = () => {
@@ -542,8 +545,8 @@ class Composer extends Component {
 
         // Render
         renderer.setSize(window.innerWidth, window.innerHeight);
-        container.current.innerHTML = '';
-        container.current.appendChild(renderer.domElement);
+        this.state.references.rendererContainer.current.innerHTML = '';
+        this.state.references.rendererContainer.current.appendChild(renderer.domElement);
 
         // Camera
         camera = getCamera();
@@ -554,18 +557,18 @@ class Composer extends Component {
         controls.target.set(0, 1, 0)
     
         // Compose scene
-        scene.add(getGround());
-        scene.add(getHemiLight());
-        scene.add(getDirectLight());
+        this.state.renderer.scene.add(getGround());
+        this.state.renderer.scene.add(getHemiLight());
+        this.state.renderer.scene.add(getDirectLight());
     
         function animate() {
             requestAnimationFrame(animate);
         
             controls.update();
         
-            animationMixer.update(clock.getDelta());
+            this.state.animations.mixer.update(clock.getDelta());
         
-            renderer.render(scene, camera);
+            renderer.render(this.state.renderer.scene, camera);
         };
         
         animate();
@@ -575,21 +578,21 @@ class Composer extends Component {
         return(
             <div className='app'>
                 <Sidebar 
-                    animationFrame={animationFrame}
-                    bake={bake}
-                    getAnimationButtons={getAnimationButtons}
-                    hasAnimations={animationActions.length > 1}
-                    maxAnimationFrame={maxAnimationFrame}
-                    modelReady={modelReady}
-                    onAnimationLoad={onAnimationLoad}
-                    onAnimationFrameChange={onAnimationFrameChange}
-                    onModelLoad={onModelLoad}
-                    onPauseContinue={onPauseContinue}
-                    onScaleChange={onScaleChange}
-                    scaleRef={scaleRef}
-                    singleStepMode={singleFrameMode}
+                    animationFrame={this.animationFrame}
+                    bake={this.bake}
+                    getAnimationButtons={this.getAnimationButtons}
+                    hasAnimations={this.state.animations.list.length > 1}
+                    maxAnimationFrame={this.state.animations.activeMaxFrame}
+                    modelReady={this.state.model.isReady}
+                    onAnimationLoad={this.onAnimationLoad}
+                    onAnimationFrameChange={this.onAnimationFrameChange}
+                    onModelLoad={this.onModelLoad}
+                    onPauseContinue={this.onPauseContinue}
+                    onScaleChange={this.onScaleChange}
+                    scaleRef={this.state.references.scaleInput}
+                    singleStepMode={this.state.animations.singleFrameModeActive}
                 />
-                <div className='renderer' ref={container}></div>
+                <div className='renderer' ref={this.state.references.rendererContainer}></div>
             </div>
         );
     }
