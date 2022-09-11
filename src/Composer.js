@@ -60,20 +60,24 @@ class Composer extends Component {
      */
     setDefaultAnimation = (object) => {
         var mix = new THREE.AnimationMixer(object);
-        this.setState({
+        this.setState(prevState => ({
+            ...prevState,
             animations: {
+                ...prevState.animations,
                 mixer: mix,
             },
-        });
+        }));
 
         if(object.animations.length !== 0) {
             const animationAction = this.state.animations.mixer.clipAction(object.animations[0]);
-            this.setState({
+            this.setState(prevState => ({
+                ...prevState,
                 animations: {
+                    ...prevState.animations,
                     active: animationAction,
                     list: [animationAction],
                 },
-            });
+            }));
         }
     };
 
@@ -89,11 +93,13 @@ class Composer extends Component {
         this.state.renderer.scene.remove(this.state.model.mesh);
         
         // Save model name.
-        this.setState({
+        this.setState(prevState => ({
+            ...prevState,
             model: {
+                ...prevState.model,
                 modelName: event.currentTarget.files[0].name.split('.')[0]
             },
-        });
+        }));
         
         // Set Events.
         reader.addEventListener('progress', onLoadingProgress);
@@ -126,14 +132,16 @@ class Composer extends Component {
             });
 
             // Save the scale, mesh and modelReady
-            this.setState({
+            this.setState(prevState => ({
+                ...prevState,
                 model: {
+                    ...prevState.model,
                     isReady: modelReady,
                     mesh: object,
                     originalScale: size.y,
                     scale: 1 / size.y,
                 }
-            });
+            }));
         });
         
         reader.readAsArrayBuffer(event.target.files[0]);
@@ -145,11 +153,13 @@ class Composer extends Component {
      */
     onUpdateScale = () => {  
         const newScale = this.state.references.scaleInput.current.valueAsNumber / this.state.model.originalScale;
-        this.setState({
+        this.setState(prevState => ({
+            ...prevState,
             model: {
+                ...prevState.model,
                 scale: newScale,
             },
-        });
+        }));
     };
 
     /** On Scale Change
@@ -190,11 +200,13 @@ class Composer extends Component {
                 object.traverse( function ( o ) {
                     if(o.animations.length > 0) {
                         const newAnimation = this.state.animations.mixer.clipAction(o.animations[0]);
-                        this.setState({
+                        this.setState(prevState => ({
+                            ...prevState,
                             animations: {
+                                ...prevState.animations,
                                 list: [...this.state.animations.list, newAnimation]
                             },
-                        });
+                        }));
                     }
                 });
             });
@@ -212,7 +224,12 @@ class Composer extends Component {
     readMultipleFiles = (reader, files) => {
         const readFile = (index) => {
           if( index >= files.length ) {
-            this.setState({ model: { isReady: true }});
+            this.setState(prevState => ({
+                ...prevState,
+                model: {
+                    ...prevState.model,
+                    isReady: true 
+            }}));
             return;
           } 
           var file = files[index];
@@ -253,12 +270,14 @@ class Composer extends Component {
      * @param {animation index} i 
      */
     onAnimationSelected = (i) => {
-        this.setState({
+        this.setState(prevState => ({
+            ...prevState,
             animations: {
+                ...prevState.animations,
                 active: this.state.animations.list[i],
                 activeIndex: i,
             },
-        });
+        }));
     };
 
     /** Get Animation buttons
