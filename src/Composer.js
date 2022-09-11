@@ -282,10 +282,16 @@ class Composer extends Component {
      * @param {new action} toAction 
      */
     setAction = (toAction) => {
-        if (toAction !== activeAction) {
-            setSingleFrameMode(false);
-            setLastAction(activeAction);
-            setActiveAction(toAction);
+        if (toAction !== this.state.animations.active) {
+            this.setState(prevState => ({
+                ...prevState,
+                animations: {
+                    ...prevState.animations,
+                    active: toAction,
+                    last: activeAction,
+                    singleFrameModeActive: true,
+                },
+            }));
         }
     };
 
