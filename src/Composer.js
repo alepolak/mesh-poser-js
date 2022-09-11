@@ -479,7 +479,7 @@ class Composer extends Component {
      * @returns 
      */
     getPosedMesh = (skinnedMesh) => {
-        var posedMeshData = stlExporter.parse( skinnedMesh, { binary: true } ); // Export the scene
+        var posedMeshData = this.state.exporters.stlExporter.parse( skinnedMesh, { binary: true } ); // Export the scene
         return posedMeshData;
     };
 
