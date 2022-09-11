@@ -3,6 +3,7 @@ import './Composer.css';
 import Sidebar from "./Sidebar";
 import * as THREE from 'three';
 import { STLExporter } from "./STLExporter";
+import {ANIMATION_FRAME_RATE} from "./const"
 
 class Composer extends Component {
 
@@ -344,15 +345,23 @@ class Composer extends Component {
      * @param {animation duration} time 
      */
     setAnimationFrameCount = (time) => {
+        let maxFrames = 30;
 
-        if(!time) {
-            setMaxAnimationFrame(30);
-        } else {
+        if(time) {
             var framesInAnimation = Math.round(time * ANIMATION_FRAME_RATE);
-            if(maxAnimationFrame != framesInAnimation) {
-                setMaxAnimationFrame(framesInAnimation === 0 ? 30 : framesInAnimation);
+            if(this.state.animations.activeMaxFrame != framesInAnimation) {
+                maxFrames = framesInAnimation === 0 ? 30 : framesInAnimation;
             }
         }
+
+        this.setState(prevState => ({
+            ...prevState,
+            animations: {
+                ...prevState.animations,
+                activeMaxFrame: maxFrames,
+            }
+        }));
+        
     };
 
     /** On Animation Frame Change
