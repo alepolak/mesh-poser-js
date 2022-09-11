@@ -393,12 +393,18 @@ class Composer extends Component {
      */
     onPauseContinue = () => {
         if (singleFrameMode) {
-            setSingleFrameMode(false);
             unPauseAllActions();
         } else {     
-            setSingleFrameMode(true);
             pauseAllActions();
         }
+
+        this.setState(prevState => ({
+            ...prevState,
+            animations: {
+                ...prevState.animations,
+                singleFrameModeActive: !singleFrameMode,
+            }
+        }));
     };
 
     /** Pause All Actions
