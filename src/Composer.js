@@ -73,13 +73,14 @@ class Composer extends Component {
         }));
 
         if(object.animations.length !== 0) {
-            const animationAction = this.state.animations.mixer.clipAction(object.animations[0]);
+            const animationAction = mix.clipAction(object.animations[0]);
             this.setState(prevState => ({
                 ...prevState,
                 animations: {
                     ...prevState.animations,
                     active: animationAction,
                     list: [animationAction],
+                    mixer: mix,
                 },
             }));
         }
@@ -90,65 +91,67 @@ class Composer extends Component {
      * Handles the loading of a new file from the computer.
      * @param {Event of loading a file} event 
      */
-    onModelLoad = (event) => {
+    loadModel = (event) => {
         const reader = new FileReader();  
         
         // Remove old model from scene.
         this.state.renderer.scene.remove(this.state.model.mesh);
-        
+        const modelName = event.currentTarget.files[0].name.split('.')[0];
+
         // Save model name.
         this.setState(prevState => ({
             ...prevState,
             model: {
                 ...prevState.model,
-                modelName: event.currentTarget.files[0].name.split('.')[0]
+                modelName: modelName,
             },
         }));
         
         // Set Events.
         reader.addEventListener('progress', this.onLoadingProgress);
         reader.addEventListener('error', this.onModelLoadingError);
-        reader.addEventListener("load", function(event) {
-
-            const defaultMaterial = new THREE.MeshStandardMaterial({ color: 0xa3a2a2, metalness: 0.1, flatShading: true });
-            const contents = event.target.result;
-            const loader = new FBXLoader();
-            let modelReady = false;
-
-            // Parse model
-            const object = loader.parse(contents);
-            const size = this.getObjectSize(object);
-
-            // Set object default animation
-            this.setDefaultAnimation(object);
-
-            // Change scale input value
-            this.state.references.scaleInput.current.value = size.y;
-            
-            // Setup the mesh
-            object.traverse( function ( o ) {
-                if(o.isMesh) {
-                    o.material = defaultMaterial;
-                    o.castShadow = true;
-                    o.receiveShadow = true;
-                    modelReady = true;
-                }
-            });
-
-            // Save the scale, mesh and modelReady
-            this.setState(prevState => ({
-                ...prevState,
-                model: {
-                    ...prevState.model,
-                    isReady: modelReady,
-                    mesh: object,
-                    originalScale: size.y,
-                    scale: 1 / size.y,
-                }
-            }));
-        });
+        reader.addEventListener("load", this.onModelLoad);
         
         reader.readAsArrayBuffer(event.target.files[0]);
+    };
+
+    onModelLoad = (event) => {
+        const defaultMaterial = new THREE.MeshStandardMaterial({ color: 0xa3a2a2, metalness: 0.1, flatShading: true });
+        const contents = event.target.result;
+        const loader = new FBXLoader();
+        let modelReady = false;
+
+        // Parse model
+        const object = loader.parse(contents);
+        const size = this.getObjectSize(object);
+
+        // Set object default animation
+        this.setDefaultAnimation(object);
+
+        // Change scale input value
+        this.state.references.scaleInput.current.value = size.y;
+        
+        // Setup the mesh
+        object.traverse( ( o ) => {
+            if(o.isMesh) {
+                o.material = defaultMaterial;
+                o.castShadow = true;
+                o.receiveShadow = true;
+                modelReady = true;
+            }
+        });
+
+        // Save the scale, mesh and modelReady
+        this.setState(prevState => ({
+            ...prevState,
+            model: {
+                ...prevState.model,
+                isReady: modelReady,
+                mesh: object,
+                originalScale: size.y,
+                scale: 1 / size.y,
+            }
+        }));
     };
 
     /** Update Model Scale.
@@ -184,7 +187,7 @@ class Composer extends Component {
      * Handles the loading of animation files from the computer.
      * @param {Event of loading a file} event 
      */
-    onAnimationLoad = (event) => {
+    loadAnimations = (event) => {
         
         if(event.target.files.length > 0) {
             const reader = new FileReader();
@@ -192,31 +195,32 @@ class Composer extends Component {
             // Set Events.
             reader.addEventListener('progress', this.onLoadingProgress);
             reader.addEventListener('error', this.onAnimationLoadingError);
-            reader.addEventListener("load", function(event) {
-            
-                const contents = event.target.result;   
-                const loader = new FBXLoader();
-
-                // Parse model
-                const object = loader.parse(contents);
-                
-                // Save animations in model
-                object.traverse( function ( o ) {
-                    if(o.animations.length > 0) {
-                        const newAnimation = this.state.animations.mixer.clipAction(o.animations[0]);
-                        this.setState(prevState => ({
-                            ...prevState,
-                            animations: {
-                                ...prevState.animations,
-                                list: [...this.state.animations.list, newAnimation]
-                            },
-                        }));
-                    }
-                });
-            });
+            reader.addEventListener("load", this.onLoadAnimation);
             
             this.readMultipleFiles(reader, event.target.files);
         }
+    };
+
+    onLoadAnimation = (event) => {
+        const contents = event.target.result;   
+        const loader = new FBXLoader();
+
+        // Parse model
+        const object = loader.parse(contents);
+        
+        // Save animations in model
+        object.traverse( ( o ) => {
+            if(o.animations.length > 0) {
+                const newAnimation = this.state.animations.mixer.clipAction(o.animations[0]);
+                this.setState(prevState => ({
+                    ...prevState,
+                    animations: {
+                        ...prevState.animations,
+                        list: [...this.state.animations.list, newAnimation]
+                    },
+                }));
+            }
+        });
     };
 
     /** Read multiple files
@@ -290,7 +294,7 @@ class Composer extends Component {
      * @returns a list of animation radio buttons.
      */
     getAnimationButtons = () => {
-        return this.state.animations.list.map( function(animation, i){
+        return this.state.animations.list.map( (animation, i) => {
             return (
                 <label className='animation__play__radio' key={i}>
                     <input type="radio" value="option1" onChange={() => {this.onAnimationSelected(i)}} checked={this.state.animations.activeIndex === i} />
@@ -438,7 +442,7 @@ class Composer extends Component {
         let geometries;
 
         // Traverse the scene to find the models
-        this.state.renderer.scene.traverse( function ( mesh ) {
+        this.state.renderer.scene.traverse( ( mesh ) => {
             if ( !mesh.isSkinnedMesh ) 
                 return;
 
@@ -566,13 +570,17 @@ class Composer extends Component {
         
             controls.update();
         
-            this.state.animations.mixer.update(clock.getDelta());
+            animationMixer.update(clock.getDelta());
         
             renderer.render(this.state.renderer.scene, camera);
         };
         
         animate();
     };
+
+    componentDidUpdate() {
+        console.log("Update");
+    }
 
     render() {
         return(
@@ -584,9 +592,9 @@ class Composer extends Component {
                     hasAnimations={this.state.animations.list.length > 1}
                     maxAnimationFrame={this.state.animations.activeMaxFrame}
                     modelReady={this.state.model.isReady}
-                    onAnimationLoad={this.onAnimationLoad}
+                    onAnimationLoad={this.loadAnimations}
                     onAnimationFrameChange={this.onAnimationFrameChange}
-                    onModelLoad={this.onModelLoad}
+                    onModelLoad={this.loadModel}
                     onPauseContinue={this.onPauseContinue}
                     onScaleChange={this.onScaleChange}
                     scaleRef={this.state.references.scaleInput}
