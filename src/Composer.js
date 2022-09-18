@@ -164,6 +164,7 @@ class Composer extends Component {
      */
     onUpdateScale = () => {  
         const newScale = this.state.references.scaleInput.current.valueAsNumber / this.state.model.originalScale;
+        this.state.model.mesh.scale.set(newScale,newScale,newScale);
         this.setState(prevState => ({
             ...prevState,
             model: {
