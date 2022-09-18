@@ -37,7 +37,11 @@ class Composer extends Component {
                 singleFrameModeActive: false,
             },
             renderer: {
+                camera: undefined,
+                controls: undefined,
+                renderer: undefined,
                 scene: new THREE.Scene(),
+                started: false,
             },
             exporters: {
                 stlExporter: new STLExporter(),
@@ -494,13 +498,11 @@ class Composer extends Component {
     /** Initialize Render
      * 
      * Initialize the 3D renderer with all the components inside (camera, lighting, etc).
-     * @param {animation mixer} animationMixer 
      */
-    initializeRender = (animationMixer) => {
+    initializeRender = () => {
         // attributes
         let camera, controls;
         const renderer = new THREE.WebGLRenderer();
-        const clock = new THREE.Clock();
         THREE.Cache.enabled = true;
 
         // Scene
@@ -559,12 +561,40 @@ class Composer extends Component {
         // Controls
         controls.enableDamping = true
         controls.target.set(0, 1, 0)
+
+        this.setState(prevState => ({
+            ...prevState,
+            renderer: {
+                ...prevState.renderer,
+                camera: camera,
+                controls: controls,
+                renderer: renderer,
+            }
+        }));
     
         // Compose scene
         this.state.renderer.scene.add(getGround());
         this.state.renderer.scene.add(getHemiLight());
         this.state.renderer.scene.add(getDirectLight());
-    
+    };
+
+    startRenderer() {
+        
+        this.setState(prevState => ({
+            ...prevState,
+            renderer: {
+                ...prevState.renderer,
+                started: true,
+            }
+        }));
+
+        const animationMixer = this.state.animations.mixer;
+        const camera = this.state.renderer.camera;
+        const clock = new THREE.Clock();
+        const controls = this.state.renderer.controls;
+        const renderer = this.state.renderer.renderer;
+        const scene = this.state.renderer.scene;
+
         function animate() {
             requestAnimationFrame(animate);
         
@@ -572,14 +602,38 @@ class Composer extends Component {
         
             animationMixer.update(clock.getDelta());
         
-            renderer.render(this.state.renderer.scene, camera);
+            renderer.render(scene, camera);
         };
         
         animate();
-    };
+    }
 
     componentDidUpdate() {
         console.log("Update");
+
+        if(this.state.animations.mixer && !this.state.renderer.started) {
+            this.startRenderer();
+        }
+
+        if(this.state.model.mesh && this.state.model.mesh !== this.state.model.lastMesh) {
+            this.setState(prevState => ({
+                ...prevState,
+                model: {
+                    ...prevState.model,
+                    lastMesh: this.state.model.mesh,
+                }
+            }));
+            this.state.renderer.scene.add(this.state.model.mesh);
+        }
+    }
+
+    componentDidCatch() {
+        console.log("Catch");
+    }
+
+    componentDidMount() {
+        console.log("Mount");
+        this.initializeRender();
     }
 
     render() {
