@@ -356,7 +356,8 @@ class Composer extends Component {
      * @param {The new animation that is going to be set} animation 
      */
     onChangedAnimation = (animation) => {
-        this.state.animations.last?.fadeOut(1);
+        this.state.animations.active.paused = true;
+        this.state.animations.active?.fadeOut(1);
         
         if(animation) {
             animation.reset();
