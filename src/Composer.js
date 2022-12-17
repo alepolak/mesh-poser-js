@@ -586,6 +586,7 @@ class Composer extends Component {
         }));
 
         const animationMixer = this.state.animations.mixer;
+        const updateAnimationFrame = () => {this.updateActiveFrame(this);}
         const camera = this.state.renderer.camera;
         const clock = new THREE.Clock();
         const controls = this.state.renderer.controls;
@@ -593,9 +594,11 @@ class Composer extends Component {
         const scene = this.state.renderer.scene;
 
         function animate() {
-            requestAnimationFrame(animate);
+            requestAnimationFrame(() => {animate(this)});
         
             controls.update();
+
+            updateAnimationFrame(this);
         
             animationMixer.update(clock.getDelta());
         
@@ -605,9 +608,23 @@ class Composer extends Component {
         animate();
     }
 
-    componentDidUpdate() {
-        console.log("Update");
+    /** Update Active Frame
+     * 
+     * On every tick of the animation, the active frame is calculated based on the active animation time and the animation frame rate.
+     */
+    updateActiveFrame() {
+        const activeFrame = Math.trunc(this.state.animations.active.time * ANIMATION_FRAME_RATE);
 
+        this.setState(prevState => ({
+            ...prevState,
+            animations: {
+                ...prevState.animations,
+                activeFrame: activeFrame,
+            }
+        }));
+    }
+
+    componentDidUpdate() {
         if(this.state.animations.mixer && !this.state.renderer.started) {
             this.startRenderer();
         }
@@ -637,7 +654,7 @@ class Composer extends Component {
         return(
             <div className='app'>
                 <Sidebar 
-                    animationFrame={this.animationFrame}
+                    animationFrame={this.state.animations.activeFrame}
                     bake={this.bake}
                     getAnimationButtons={this.getAnimationButtons}
                     hasAnimations={this.state.animations.list.length > 1}
