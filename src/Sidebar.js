@@ -3,21 +3,9 @@ import './Sidebar.css';
 import icons from './Icons';
 import FileButton from './FileButton';
 import SidebarPanel from './components/sidebar/sidebar-panel';
+import ModelPanel from './components/sidebar/model-panel';
 
 const Sidebar = (props) => {
-
-    /**
-     * Scale input
-     * 
-     */
-    const drawScaleInput = () => {
-        return (
-            <div className='model__scale__menu'>
-                <p className='model__scale__label'>Scale:</p>
-                <input className='model__scale__input' ref={props.scaleRef} onChange={props.onScaleChange} type="number" />
-            </div>
-        );
-    };
 
     /**
      *  Animation Menu
@@ -82,15 +70,7 @@ const Sidebar = (props) => {
 
     return(
         <div className='sidebar'>
-            <SidebarPanel>
-                <p className='menu__title'> MODEL </p>
-                <FileButton
-                    buttonLabel="Load model"
-                    onModelLoad={props.onModelLoad}
-                    isMultiple={false}
-                />
-                {drawScaleInput()}
-            </SidebarPanel>
+            <ModelPanel scaleRef={props.scaleRef} onScaleChange={props.onScaleChange} onModelLoad={props.onModelLoad}/>
             {drawAnimationMenu()}
             {drawAnimationPlayerMenu()}
             {drawExportMenu()}

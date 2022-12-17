@@ -1,0 +1,16 @@
+.scale__menu {
+    width: 90%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.scale__label {
+    margin: 0px;
+}
+
+.scale__input {
+    width: 4.375rem;
+    height: 1rem;
+}
