@@ -293,13 +293,17 @@ class Composer extends Component {
      */
     getAnimationButtons = () => {
         return this.state.animations.list.map( (animation, i) => {
-            return (
-                <label className='animation__play__radio' key={i}>
-                    <input type="radio" value="option1" onChange={() => {this.onAnimationSelected(i)}} checked={this.state.animations.activeIndex === i} />
-                    Animation {i} 
-                </label>
-            )
-        }); 
+            if(i === 0) {
+                return "";
+            } else {
+                return (
+                    <label className='animation__play__radio' key={i}>
+                        <input type="radio" value="option1" onChange={() => {this.onAnimationSelected(i)}} checked={this.state.animations.activeIndex === i} />
+                        Animation {i} 
+                    </label>
+                );
+            }
+        });  
     };
 
     /** Set Active Action (animation)
