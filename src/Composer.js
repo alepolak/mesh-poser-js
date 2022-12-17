@@ -9,6 +9,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { ANIMATION_FRAME_RATE } from "./const";
 import { mergeBufferGeometries} from 'three/examples/jsm/utils/BufferGeometryUtils';
 import { saveAs } from 'file-saver';
+import { Vector3 } from "three";
 
 class Composer extends Component {
 
@@ -98,27 +99,34 @@ class Composer extends Component {
      * @param {Event of loading a file} event 
      */
     loadModel = (event) => {
-        const reader = new FileReader();  
-        
-        // Remove old model from scene.
-        this.state.renderer.scene.remove(this.state.model.mesh);
-        const modelName = event.currentTarget.files[0].name.split('.')[0];
+        if( event.currentTarget.files.length > 0 ) {
+            const reader = new FileReader();  
+            
+            // Remove old model from scene.
+            this.state.renderer.scene.remove(this.state.model.mesh);
+            const modelName = event.currentTarget.files[0].name.split('.')[0];
 
-        // Save model name.
-        this.setState(prevState => ({
-            ...prevState,
-            model: {
-                ...prevState.model,
-                modelName: modelName,
-            },
-        }));
-        
-        // Set Events.
-        reader.addEventListener('progress', this.onLoadingProgress);
-        reader.addEventListener('error', this.onModelLoadingError);
-        reader.addEventListener("load", this.onModelLoad);
-        
-        reader.readAsArrayBuffer(event.target.files[0]);
+            // Save model name.
+            this.setState(prevState => ({
+                ...prevState,
+                model: {
+                    ...prevState.model,
+                    modelName: modelName,
+                },
+            }));
+            
+            // Set Events.
+            reader.addEventListener('progress', this.onLoadingProgress);
+            reader.addEventListener('error', this.onModelLoadingError);
+            reader.addEventListener("load", this.onModelLoad);
+            
+            reader.readAsArrayBuffer(event.target.files[0]);
+        }
+    };
+
+    
+    isZero(size) {
+        return size.x === 0 && size.y === 0 && size.z === 0;
     };
 
     onModelLoad = (event) => {
@@ -131,34 +139,39 @@ class Composer extends Component {
         const object = loader.parse(contents);
         const size = this.getObjectSize(object);
 
-        // Set object default animation
-        this.setDefaultAnimation(object);
-
-        // Change scale input value
-        this.state.references.scaleInput.current.value = size.y;
-        
-        // Setup the mesh
-        object.traverse( ( o ) => {
-            if(o.isMesh) {
-                o.material = defaultMaterial;
-                o.castShadow = true;
-                o.receiveShadow = true;
-                modelReady = true;
-            }
-        });
-
-        // Save the scale, mesh and modelReady
-        this.setState(prevState => ({
-            ...prevState,
-            model: {
-                ...prevState.model,
-                isReady: modelReady,
-                mesh: object,
-                originalScale: size.y,
-                scale: 1 / size.y,
-            }
-        }));
+        if(!this.isZero(size)) {
+            // Set object default animation
+            this.setDefaultAnimation(object);
+            
+            // Change scale input value
+            this.state.references.scaleInput.current.value = size.y;
+            
+            // Setup the mesh
+            object.traverse( ( o ) => {
+                if(o.isMesh) {
+                    o.material = defaultMaterial;
+                    o.castShadow = true;
+                    o.receiveShadow = true;
+                    modelReady = true;
+                }
+            });
+            
+            // Save the scale, mesh and modelReady
+            this.setState(prevState => ({
+                ...prevState,
+                model: {
+                    ...prevState.model,
+                    isReady: modelReady,
+                    mesh: object,
+                    originalScale: size.y,
+                    scale: 1 / size.y,
+                }
+            }));
+        } else {
+            this.onModelLoadingError(`This model doesn't have a skin (it could be an animation)`);
+        }
     };
+
 
     /** Update Model Scale.
      * 
@@ -259,15 +272,16 @@ class Composer extends Component {
 
     /* ERROR HANDLING */
     onModelLoadingError = (error) => {
-        this.onLoadingError(error);
+        this.onLoadingError(`MODEL LOADING ERROR\n${error}`);
     };
 
     onAnimationLoadingError = (error) => {
-        this.onLoadingError(error);
+        this.onLoadingError(`ANIMATION LOADING ERROR\n${error}`);
     };
 
     onLoadingError = (error) => {
-        console.log(error);
+        console.error(error);      
+        alert(error);
     };
 
     /** Loading progress
