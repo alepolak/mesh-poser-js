@@ -280,17 +280,10 @@ class Composer extends Component {
     /** On Animation Selected
      * 
      * Set the selected animation and save the index.
-     * @param {animation index} i 
+     * @param {Index of the selected animation} i 
      */
     onAnimationSelected = (i) => {
-        this.setState(prevState => ({
-            ...prevState,
-            animations: {
-                ...prevState.animations,
-                active: this.state.animations.list[i],
-                activeIndex: i,
-            },
-        }));
+        this.setAction(i);
     };
 
     /** Get Animation buttons
@@ -311,43 +304,46 @@ class Composer extends Component {
 
     /** Set Active Action (animation)
      * 
-     * @param {new action} toAction 
+     * @param {Index of the selected animation} animationIndex 
      */
-    setAction = (toAction) => {
-        if (toAction !== this.state.animations.active) {
+    setAction = (animationIndex) => {
+        const newAnimation = this.state.animations.list[animationIndex];
+        if (newAnimation !== this.state.animations.active) {
+
+            const oldAnimation = this.state.animations.active;
+            const animationTime = newAnimation.getClip().duration;
+
             this.setState(prevState => ({
                 ...prevState,
                 animations: {
                     ...prevState.animations,
-                    active: toAction,
-                    last: this.state.animations.active,
-                    singleFrameModeActive: true,
+                    active: newAnimation,
+                    activeFrame: 0,         
+                    activeIndex: animationIndex,
+                    activeMaxFrame: Math.round(animationTime * ANIMATION_FRAME_RATE),
+                    last: oldAnimation ?? newAnimation,
+                    singleFrameModeActive: false,
                 },
             }));
+
+            this.onChangedAnimation(newAnimation);
         }
     };
 
     /** On Changed Animation
      * 
      * Handles the transition from one animation into the other.
+     * @param {The new animation that is going to be set} animation 
      */
-    onChangedAnimation = () => {
+    onChangedAnimation = (animation) => {
         this.state.animations.last?.fadeOut(1);
         
-        if(this.state.animations.active) {
-            this.state.animations.active.reset();
-            this.state.animations.active.fadeIn(1);
-            this.state.animations.active.play();
-            this.state.animations.active.paused = false;
-
-            this.setState(prevState => ({
-                ...prevState,
-                animations: {
-                    ...prevState.animations,
-                    activeFrame: 0,
-                    activeMaxFrame: this.state.animations.active.getClip().duration,
-                }
-            }));
+        if(animation) {
+            animation.reset();
+            animation.fadeIn(1);
+            animation.paused = false;
+            animation.time = 0;
+            animation.play();
         }
     };
 

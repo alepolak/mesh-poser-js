@@ -1,0 +1,30 @@
+this.state = {
+            references: {
+                rendererContainer: React.createRef(),
+                scaleInput: React.createRef(),
+            },
+            model: {
+                isReady: false,
+                lastMesh: undefined,
+                modelName: undefined,
+                mesh: undefined,
+                originalScale: undefined,
+                scale: undefined,
+            },
+            animations: {
+                active: undefined,
+                activeFrame: undefined,
+                activeIndex: undefined,
+                activeMaxFrame: undefined,
+                last: undefined,
+                list: [],
+                mixer: undefined,
+                singleFrameModeActive: false,
+            },
+            renderer: {
+                scene: new THREE.Scene(),
+            },
+            exporters: {
+                stlExporter: new STLExporter(),
+            }
+        };
