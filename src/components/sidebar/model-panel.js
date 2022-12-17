@@ -15,7 +15,7 @@ const ModelPanel = (props) => {
     };
 
     return (
-        <SidebarPanel>
+        <SidebarPanel title={'MODEL'}>
             <FileButton
                 buttonLabel="Load model"
                 onModelLoad={props.onModelLoad}
