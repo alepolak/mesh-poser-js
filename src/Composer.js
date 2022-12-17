@@ -9,7 +9,6 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { ANIMATION_FRAME_RATE } from "./const";
 import { mergeBufferGeometries} from 'three/examples/jsm/utils/BufferGeometryUtils';
 import { saveAs } from 'file-saver';
-import { Vector3 } from "three";
 
 class Composer extends Component {
 
