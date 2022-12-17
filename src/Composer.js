@@ -7,6 +7,8 @@ import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { ANIMATION_FRAME_RATE } from "./const";
+import { mergeBufferGeometries} from 'three/examples/jsm/utils/BufferGeometryUtils';
+import { saveAs } from 'file-saver';
 
 class Composer extends Component {
 
@@ -461,7 +463,7 @@ class Composer extends Component {
 
         
         // Join all the meshes together
-        geometries = this.mergeBufferGeometries(posedMeshList);
+        geometries = mergeBufferGeometries(posedMeshList);
         geometries.computeBoundingBox();
 
         // Creates the final mesh
@@ -481,7 +483,7 @@ class Composer extends Component {
     saveFile = (mesh) => {
         var str = this.getPosedMesh(mesh);
         var blob = new Blob( [str], { type : 'text/plain' } ); // Generate Blob from the string
-        this.saveAs( blob, `${this.state.model.modelName}.stl` ); //Save the Blob to file.stl
+        saveAs( blob, `${this.state.model.modelName}.stl` ); //Save the Blob to file.stl
     };
 
     /** Get Posed Mesh
