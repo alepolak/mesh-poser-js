@@ -45,7 +45,7 @@ const Sidebar = (props) => {
      * 
      */
     const drawAnimationPlayerMenu = () => {
-        if(props.hasAnimations) {
+        if(props.hasAnimations && props.maxAnimationFrame > 0) {
             return (
                 <div className='animation__player__bar'>
                     <p className='menu__title'> FRAMES </p>

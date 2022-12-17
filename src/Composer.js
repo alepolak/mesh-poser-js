@@ -28,9 +28,9 @@ class Composer extends Component {
             },
             animations: {
                 active: undefined,
-                activeFrame: undefined,
+                activeFrame: 0,
                 activeIndex: undefined,
-                activeMaxFrame: undefined,
+                activeMaxFrame: 0,
                 last: undefined,
                 list: [],
                 mixer: undefined,
