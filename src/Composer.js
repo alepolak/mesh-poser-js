@@ -168,7 +168,7 @@ class Composer extends Component {
                 }
             }));
         } else {
-            this.onModelLoadingError(`This model doesn't have a skin (it could be an animation)`);
+            this.onModelLoadingError(`This model doesn't have a skin, maybe it's an animation`);
         }
     };
 
