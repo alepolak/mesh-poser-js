@@ -2,6 +2,7 @@ import React from 'react';
 import './Sidebar.css';
 import icons from './Icons';
 import FileButton from './FileButton';
+import SidebarPanel from './components/sidebar/sidebar-panel';
 
 const Sidebar = (props) => {
 
@@ -25,17 +26,17 @@ const Sidebar = (props) => {
     const drawAnimationMenu = () => {
         if(props.modelReady) {
             return (
-                <div className='animation__bar'>
+                <SidebarPanel>
                     <p className='menu__title'> ANIMATIONS </p>
                     <FileButton
                         buttonLabel="Load animations"
                         onModelLoad={props.onAnimationLoad}
                         isMultiple={true}
-                    />
+                        />
                     <form className='animation__radios'>
                         {props.getAnimationButtons()}
                     </form> 
-                </div>
+                </SidebarPanel>
             );
         }
     };
@@ -47,7 +48,7 @@ const Sidebar = (props) => {
     const drawAnimationPlayerMenu = () => {
         if(props.hasAnimations && props.maxAnimationFrame > 0) {
             return (
-                <div className='animation__player__bar'>
+                <SidebarPanel>
                     <p className='menu__title'> FRAMES </p>
                     <div className='animation__frames'>
                         <button className='animation__toggle__button' onClick={props.onPauseContinue}>
@@ -56,7 +57,7 @@ const Sidebar = (props) => {
                         <p className='animation__frames__data'> {props.animationFrame}/{props.maxAnimationFrame} </p>
                     </div>
                     <input className='animation__frames__slider' type="range" min="0" max={props.maxAnimationFrame} value={props.animationFrame} onChange={props.onAnimationFrameChange} step="1"/>  
-                </div>
+                </SidebarPanel>
             );
         }
     };
@@ -72,16 +73,16 @@ const Sidebar = (props) => {
     const drawExportMenu = () => {
         if(props.modelReady) {
             return (
-                <div className='export__bar'>     
+                <SidebarPanel>    
                     <button  className='export__button' onClick={props.bake}> Bake mesh </button>
-                </div>
+                </SidebarPanel>
             );
         }
     };
 
     return(
         <div className='sidebar'>
-            <div className='model__bar'>
+            <SidebarPanel>
                 <p className='menu__title'> MODEL </p>
                 <FileButton
                     buttonLabel="Load model"
@@ -89,7 +90,7 @@ const Sidebar = (props) => {
                     isMultiple={false}
                 />
                 {drawScaleInput()}
-            </div>
+            </SidebarPanel>
             {drawAnimationMenu()}
             {drawAnimationPlayerMenu()}
             {drawExportMenu()}
