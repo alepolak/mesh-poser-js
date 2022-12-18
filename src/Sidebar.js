@@ -6,24 +6,6 @@ import ModelPanel from './components/sidebar/model-panel';
 import AnimationLoader from './components/sidebar/animationLoader-panel';
 
 const Sidebar = (props) => {
-
-    /**
-     *  Animation Menu
-     * 
-     */
-    const drawAnimationMenu = () => {
-        if(props.modelReady) {
-            return (
-                <AnimationLoader 
-                    activeIndex={props.activeIndex}
-                    animationList={props.animationList}
-                    onAnimationLoad={props.onAnimationLoad}
-                    onAnimationSelected={props.onAnimationSelected}
-                />
-            );
-        }
-    };
-
     /**
      *  Animation Player Menu
      * 
@@ -63,10 +45,24 @@ const Sidebar = (props) => {
         }
     };
 
+    const drawMenus = () => {
+        if(props.modelReady) {
+            return(
+                <AnimationLoader 
+                    activeIndex={props.activeIndex}
+                    animationList={props.animationList}
+                    onAnimationLoad={props.onAnimationLoad}
+                    onAnimationSelected={props.onAnimationSelected}
+                />
+
+            );
+        }
+    };
+
     return(
         <div className='sidebar'>
             <ModelPanel scaleRef={props.scaleRef} onScaleChange={props.onScaleChange} onModelLoad={props.onModelLoad}/>
-            {drawAnimationMenu()}
+            {drawMenus()}
             {drawAnimationPlayerMenu()}
             {drawExportMenu()}
         </div>
