@@ -1,9 +1,9 @@
 import React from 'react';
 import './Sidebar.css';
 import icons from './Icons';
-import FileButton from './FileButton';
 import SidebarPanel from './components/sidebar/sidebar-panel';
 import ModelPanel from './components/sidebar/model-panel';
+import AnimationLoader from './components/sidebar/animationLoader-panel';
 
 const Sidebar = (props) => {
 
@@ -14,17 +14,12 @@ const Sidebar = (props) => {
     const drawAnimationMenu = () => {
         if(props.modelReady) {
             return (
-                <SidebarPanel>
-                    <p className='menu__title'> ANIMATIONS </p>
-                    <FileButton
-                        buttonLabel="Load animations"
-                        onModelLoad={props.onAnimationLoad}
-                        isMultiple={true}
-                        />
-                    <form className='animation__radios'>
-                        {props.getAnimationButtons()}
-                    </form> 
-                </SidebarPanel>
+                <AnimationLoader 
+                    activeIndex={props.activeIndex}
+                    animationList={props.animationList}
+                    onAnimationLoad={props.onAnimationLoad}
+                    onAnimationSelected={props.onAnimationSelected}
+                />
             );
         }
     };

@@ -301,26 +301,6 @@ class Composer extends Component {
         this.setAction(i);
     };
 
-    /** Get Animation buttons
-     * 
-     * Create a radio button per every animation loaded.
-     * @returns a list of animation radio buttons.
-     */
-    getAnimationButtons = () => {
-        return this.state.animations.list.map( (animation, i) => {
-            if(i === 0) {
-                return "";
-            } else {
-                return (
-                    <label className='animation__play__radio' key={i}>
-                        <input type="radio" value="option1" onChange={() => {this.onAnimationSelected(i)}} checked={this.state.animations.activeIndex === i} />
-                        Animation {i} 
-                    </label>
-                );
-            }
-        });  
-    };
-
     /** Set Active Action (animation)
      * 
      * @param {Index of the selected animation} animationIndex 
@@ -674,14 +654,17 @@ class Composer extends Component {
         return(
             <div className='app'>
                 <Sidebar 
+                    activeIndex={this.state.animations.activeIndex}
                     animationFrame={this.state.animations.activeFrame}
+                    animationList={this.state.animations.list}
                     bake={this.bake}
                     getAnimationButtons={this.getAnimationButtons}
                     hasAnimations={this.state.animations.list.length > 1}
                     maxAnimationFrame={this.state.animations.activeMaxFrame}
                     modelReady={this.state.model.isReady}
-                    onAnimationLoad={this.loadAnimations}
                     onAnimationFrameChange={this.onAnimationFrameChange}
+                    onAnimationLoad={this.loadAnimations}
+                    onAnimationSelected={this.onAnimationSelected}
                     onModelLoad={this.loadModel}
                     onPauseContinue={this.onPauseContinue}
                     onScaleChange={this.onScaleChange}
