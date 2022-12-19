@@ -6,20 +6,6 @@ import AnimationLoader from './components/sidebar/animationLoader-panel';
 import AnimationPlayer from './components/sidebar/animationPlayer-panel';
 
 const Sidebar = (props) => {
-    /**
-     *  Export Menu
-     * 
-     */
-    const drawExportMenu = () => {
-        if(props.modelReady) {
-            return (
-                <SidebarPanel>    
-                    <button  className='export__button' onClick={props.bake}> Bake mesh </button>
-                </SidebarPanel>
-            );
-        }
-    };
-
     const drawMenus = () => {
         if(props.modelReady) {
             return(
@@ -32,7 +18,7 @@ const Sidebar = (props) => {
                     />
                     {
                         props.hasAnimations && props.maxAnimationFrame > 0 &&
-                        
+
                         <AnimationPlayer
                             animationFrame={props.animationFrame}
                             maxAnimationFrame={props.maxAnimationFrame}
@@ -41,6 +27,9 @@ const Sidebar = (props) => {
                             singleStepMode={props.singleStepMode}
                         />
                     }
+                    <SidebarPanel>    
+                        <button  className='export__button' onClick={props.bake}> Bake mesh </button>
+                    </SidebarPanel>
                 </>
             );
         }
@@ -50,7 +39,6 @@ const Sidebar = (props) => {
         <div className='sidebar'>
             <ModelPanel scaleRef={props.scaleRef} onScaleChange={props.onScaleChange} onModelLoad={props.onModelLoad}/>
             {drawMenus()}
-            {drawExportMenu()}
         </div>
     );
 };
