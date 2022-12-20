@@ -1,0 +1,27 @@
+.load__button {
+    width: 90%;
+}
+
+.radios {
+    width: 100%;
+    margin-top: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 0.25rem;
+}
+
+.radio__item {
+    width: 100%;
+    height: 1.25rem;
+    line-height: 1rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.animation__name {
+    width: 90%;
+}
