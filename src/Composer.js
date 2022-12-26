@@ -143,6 +143,7 @@ class Composer extends Component {
             this.setDefaultAnimation(object);
             
             // Change scale input value
+            // eslint-disable-next-line
             this.state.references.scaleInput.current.value = size.y;
             
             // Setup the mesh
@@ -335,6 +336,7 @@ class Composer extends Component {
      * @param {The new animation that is going to be set} animation 
      */
     onChangedAnimation = (animation) => {
+        // eslint-disable-next-line
         this.state.animations.active.paused = true;
         this.state.animations.active?.fadeOut(1);
         
@@ -390,7 +392,9 @@ class Composer extends Component {
         }));
 
         this.state.animations.active?.play();
+        // eslint-disable-next-line
         this.state.animations.active.paused = true;
+        // eslint-disable-next-line
         this.state.animations.active.time = frame / ANIMATION_FRAME_RATE;
         this.state.animations.mixer.update(0.1);
     };
@@ -506,7 +510,9 @@ class Composer extends Component {
         this.state.renderer.scene.add(new THREE.AxesHelper(15))
 
         // Background and fog
+        // eslint-disable-next-line
         this.state.renderer.scene.background = new THREE.Color( 0x303030 );
+        // eslint-disable-next-line
         this.state.renderer.scene.fog = new THREE.Fog( 0x303030, 10, 50 );
 
         // Lights
@@ -548,6 +554,7 @@ class Composer extends Component {
 
         // Render
         renderer.setSize(window.innerWidth, window.innerHeight);
+        // eslint-disable-next-line
         this.state.references.rendererContainer.current.innerHTML = '';
         this.state.references.rendererContainer.current.appendChild(renderer.domElement);
 
