@@ -1,4 +1,4 @@
-import react from 'react';
+import React from 'react';
 import './animationLoader-panel.css';
 import FileButton from '../../FileButton';
 import SidebarPanel from './sidebar-panel';

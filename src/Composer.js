@@ -357,7 +357,7 @@ class Composer extends Component {
 
         if(time) {
             var framesInAnimation = Math.round(time * ANIMATION_FRAME_RATE);
-            if(this.state.animations.activeMaxFrame != framesInAnimation) {
+            if(this.state.animations.activeMaxFrame !== framesInAnimation) {
                 maxFrames = framesInAnimation === 0 ? 30 : framesInAnimation;
             }
         }

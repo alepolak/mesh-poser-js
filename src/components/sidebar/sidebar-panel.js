@@ -1,4 +1,4 @@
-import react from 'react';
+import React from 'react';
 import './sidebar-panel.css';
 
 const SidebarPanel = (props) => {

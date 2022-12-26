@@ -1,4 +1,4 @@
-import react from 'react';
+import React from 'react';
 import './animationPlayer-panel.css';
 import SidebarPanel from './sidebar-panel';
 import icons from '../../Icons';
