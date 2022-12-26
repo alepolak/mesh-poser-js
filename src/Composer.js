@@ -640,13 +640,8 @@ class Composer extends Component {
             this.state.renderer.scene.add(this.state.model.mesh);
         }
     }
-
-    componentDidCatch() {
-        console.log("Catch");
-    }
-
+    
     componentDidMount() {
-        console.log("Mount");
         this.initializeRender();
     }
 

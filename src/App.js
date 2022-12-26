@@ -1,5 +1,4 @@
 import './App.css';
-import Poser from './Poser';
 import Composer from './Composer';
 
 function App() {

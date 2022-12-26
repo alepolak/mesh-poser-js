@@ -164,8 +164,6 @@ var FBXLoader = ( function () {
 
 			}
 
-			// console.log( fbxTree );
-
 			var textureLoader = new TextureLoader( this.manager ).setPath( this.resourcePath || path ).setCrossOrigin( this.crossOrigin );
 
 			return new FBXTreeParser( textureLoader ).parse( fbxTree );
@@ -3317,8 +3315,6 @@ var FBXLoader = ( function () {
 			reader.skip( 23 ); // skip magic 23 bytes
 
 			var version = reader.getUint32();
-
-			console.log( 'THREE.FBXLoader: FBX binary version: ' + version );
 
 			var allNodes = new FBXTree();
 
