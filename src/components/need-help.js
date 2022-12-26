@@ -3,7 +3,7 @@ import './need-help.css';
 
 const NeedHelp = () => {
     return (
-        <a href='https://github.com/alepolak/mesh-poser-js#examples' target={"_blank"} rel="noopener">Need help?</a>
+        <a href='https://github.com/alepolak/mesh-poser-js#examples' target={"_blank"} rel="noreferrer noopener">Need help?</a>
     );
 };
 
