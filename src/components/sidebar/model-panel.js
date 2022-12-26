@@ -5,11 +5,12 @@ import SidebarPanel from './sidebar-panel';
 
 const ModelPanel = (props) => {
     
+   
     const drawScaleInput = () => {
         return (
             <div className='scale__menu'>
                 <p className='scale__label'>Scale:</p>
-                <input className='scale__input' ref={props.scaleRef} onChange={props.onScaleChange} type="number" />
+                <input className='scale__input' ref={props.scaleRef} onChange={props.onScaleChange} type="number" disabled={!props.modelReady}/>
             </div>
         );
     };

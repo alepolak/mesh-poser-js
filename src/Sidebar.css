@@ -9,7 +9,6 @@
 
 
 .sidebar {
-    outline: 1px solid red;
     position: fixed;;
     width: 10rem;
     left: 1rem;

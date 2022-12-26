@@ -37,7 +37,7 @@ const Sidebar = (props) => {
 
     return(
         <div className='sidebar'>
-            <ModelPanel scaleRef={props.scaleRef} onScaleChange={props.onScaleChange} onModelLoad={props.onModelLoad}/>
+            <ModelPanel scaleRef={props.scaleRef} onScaleChange={props.onScaleChange} onModelLoad={props.onModelLoad} modelReady={props.modelReady}/>
             {drawMenus()}
         </div>
     );
