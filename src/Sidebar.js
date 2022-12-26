@@ -4,6 +4,7 @@ import SidebarPanel from './components/sidebar/sidebar-panel';
 import ModelPanel from './components/sidebar/model-panel';
 import AnimationLoader from './components/sidebar/animationLoader-panel';
 import AnimationPlayer from './components/sidebar/animationPlayer-panel';
+import NeedHelp from './components/need-help';
 
 const Sidebar = (props) => {
     const drawMenus = () => {
@@ -39,6 +40,7 @@ const Sidebar = (props) => {
         <div className='sidebar'>
             <ModelPanel scaleRef={props.scaleRef} onScaleChange={props.onScaleChange} onModelLoad={props.onModelLoad} modelReady={props.modelReady}/>
             {drawMenus()}
+            <NeedHelp/>
         </div>
     );
 };

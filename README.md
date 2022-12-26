@@ -1,70 +1,46 @@
-# Getting Started with Create React App
+# 3D Model Animation Exporter
+A web app that allows you to upload a 3D model and its animations, and export a baked 3D model in a specific frame of the animation as a STL file for 3D printing.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Features
+- Upload a 3D model and its animations in FBX format.
+- Preview the animation and select a specific frame to bake.
+- Export the baked 3D model in the selected frame as a STL file, ready for 3D printing.
 
-## Available Scripts
+## Usage
+1. Go to: [animation-to-stl.netlify.app](https://animation-to-stl.netlify.app/).
+2. Click the `Load Model` button to select a 3D model file (remember that the model needs to be a FBX file).
+3. The 3D model is going to appear in the screen. 
+4. Click `Load Animations` to select animations for that model (remember that the animations needs to be in a FBX file).
+5. The list of animations is going to appear in the sidebar.
+6. Select any animation to start playing it.
+7. You can pause the animation at any frame or use the slider to select any particular frame.
+8. Click `Bake mesh` to export the model as a STL file.
 
-In the project directory, you can run:
+### Tools
+- You can use the `Scale Input` to change the model size.
+- You can use the mouse scroll wheel to zoom in/out.
+- You can use the mouse left click to rotate the camera.
+- You could use the mouse right click to pan the camera.
 
-### `npm start`
+## Examples
+- [How to load a custom model](https://www.loom.com/share/3b592a51f62741c9a2c7255c0805cb0b).
+- [How to load a character with animations](https://www.loom.com/share/910fccfda36a4847bdad9bd2241c2f50).
+- For 3D models an animations, you could use: [Mixamo](https://www.mixamo.com/#/).
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Installation
+The app is built with React and THREEjs. If you want to run the app locally, you have to:
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- Clone this repository to your local machine
+- Navigate to the root directory of the repository
+- Run: `npm install` 
+- Rune: `npm run start`
 
-### `npm test`
+## Contributing
+If you would like to contribute to this project, please fork the repository and create a pull request with your changes.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## License
+This project is licensed under the MIT License. See the LICENSE file for details.
 
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Known Issues
+1. If you load a model, animations and then you load a model again, the app stops working and you need to refresh.
+2. Some FBX model are not loading correctly.
