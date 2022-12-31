@@ -60,7 +60,7 @@ const Modal = (props) => {
                     <div className='prev__button_container'>
                         { activeStep !== 0 && 
                             <button className='button__prev' onClick={onPrevious}>   
-                                <img src={prevIcon} className="button__icon"/>
+                                <img src={prevIcon} className="button__icon" alt='previous icon'/>
                             </button>}
                     </div>
                     <div className='steps__container'>
@@ -72,7 +72,7 @@ const Modal = (props) => {
                         <button className='button__finish' onClick={onClose}> <strong> Done </strong> </button>
                         :
                         <button className='button__next' onClick={onNext}>
-                            <img src={nextIcon} className="button__icon"/>
+                            <img src={nextIcon} className="button__icon" alt='next icon'/>
                         </button>
                         }
                     </div>
