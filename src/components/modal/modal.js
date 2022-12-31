@@ -1,5 +1,6 @@
 import React from 'react';
 import './modal.css';
+import VideoPlayer  from '../video-player';
 
 const Modal = () => {
 
@@ -9,6 +10,9 @@ const Modal = () => {
     const onClose = () => {};
     const onPrevious = () => {};
     const onNext = () => {};
+
+    const videoPath = 'file:///C:\DATA\Proyectos\Paginas Web\Web\mesh-poser\client\public\tutorial\animation-control.webm';
+    const video2 = '/media/animation-control.webm';
 
     return (
         <div className='modal__background'>
@@ -20,7 +24,7 @@ const Modal = () => {
                     </div>                
                 </div>
                 <div className='container'>
-                    container
+                    <VideoPlayer url={videoPath}></VideoPlayer>
                 </div>
                 <div className='steps'>
                     { showPrevButton && <button className='button__prev'onClick={onPrevious}> <strong>&lt;</strong> </button>}
