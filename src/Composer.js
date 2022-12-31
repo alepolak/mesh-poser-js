@@ -669,6 +669,7 @@ class Composer extends Component {
                     onAnimationSelected={this.onAnimationSelected}
                     onModelLoad={this.loadModel}
                     onPauseContinue={this.onPauseContinue}
+                    openModal={this.props.openModal}
                     onScaleChange={this.onScaleChange}
                     scaleRef={this.state.references.scaleInput}
                     singleStepMode={this.state.animations.singleFrameModeActive}

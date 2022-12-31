@@ -40,7 +40,7 @@ const Sidebar = (props) => {
         <div className='sidebar'>
             <ModelPanel scaleRef={props.scaleRef} onScaleChange={props.onScaleChange} onModelLoad={props.onModelLoad} modelReady={props.modelReady}/>
             {drawMenus()}
-            <NeedHelp/>
+            <NeedHelp openModal={props.openModal}/>
         </div>
     );
 };

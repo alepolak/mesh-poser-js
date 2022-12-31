@@ -10,8 +10,8 @@
 }
 
 .modal {
-    width: 25rem;
-    height: 35rem;
+    width: 35rem;
+    height: 41rem;
     border-radius: 0.5rem;
     background-color: var(--menu-background-color);
     box-shadow: 5px 5px 10px var(--shadow-color-darker);
@@ -33,31 +33,55 @@
 }
 
 .top__button__container {
-    width: 100%;
+    width: 10%;
     display: flex;
     align-items: center;
     justify-content: flex-end;
 }
 
-
 .title {
-
+    width: 90%;
+    font-size: 1.25rem;
+    text-align: left;
 }
 
 
 .container {
-    outline: 1px solid green;
     width: 90%;
     height: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.description__text {
+    width: 80%;
+    font-size: 0.9rem;
 }
 
 .steps {
     width: 90%;
-    outline: 1px solid red;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-around;
+}
+
+.steps__container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.step__radio {
+
+}
+
+.prev__button_container {
+    width: 3rem;
+    height: 1.5rem;
 }
 
 button {
@@ -66,18 +90,25 @@ button {
     border-radius: 50%;
     border: 0;
     box-shadow: 1px 1px 5px var(--shadow-color);
+    cursor: pointer;
 }
 
 
 .button__close {
-    color: white;
+    color: var(--menu-background-color);
     background-color: var(--exit-color);
 }
 
-.button__prev {
+.next__button_container {
+    width: 3rem;
 }
 
 .button__finish {
+    color: var(--menu-background-color);
+    border-radius: 3px;
+    width: 3rem;
+    background-color: var(--ok-color);
+    box-shadow: 1px 1px 5px var(--shadow-color);
 }
 
 .button__next {

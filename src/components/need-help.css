@@ -1,4 +1,6 @@
-a {
+.need__help {
     color: hsl(0, 0%, 100%);
     font-size: 0.75rem;
+    text-decoration: underline;
+    cursor: pointer;
 }
