@@ -5,6 +5,9 @@
     --button-border-color: #999999;
     --button-hover-color: #e3e3e3e3;
     --shadow-color: #383838;
+    --shadow-color-darker: #1a1a1a;
+    --exit-color: hsl(0, 100%, 60%);
+    --ok-color: hsl(125, 65%, 50%);
 }
 
 
