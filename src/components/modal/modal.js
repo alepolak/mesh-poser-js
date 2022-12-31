@@ -1,10 +1,12 @@
 import React, {useState, useEffect} from 'react';
 import './modal.css';
 import VideoPlayer  from '../video-player';
-import { tutorial_videos, tutorial_description, tutorial_title } from '../../video-paths';
+import { tutorial_videos, tutorial_description, tutorial_title } from '../../video-tutorial-resources';
 
 const Modal = (props) => {
     const [activeStep, setActiveStep] = useState(0);
+    const nextIcon = "https://img.icons8.com/ios-filled/512/forward--v1.png";
+    const prevIcon = "https://img.icons8.com/ios-filled/512/back.png";
 
     useEffect(() => {
         console.log(`Rendering: `,activeStep);
@@ -56,7 +58,10 @@ const Modal = (props) => {
                 </div>
                 <div className='steps'>
                     <div className='prev__button_container'>
-                        { activeStep !== 0 && <button className='button__prev' onClick={onPrevious}> <strong>&lt;</strong> </button>}
+                        { activeStep !== 0 && 
+                            <button className='button__prev' onClick={onPrevious}>   
+                                <img src={prevIcon} className="button__icon"/>
+                            </button>}
                     </div>
                     <div className='steps__container'>
                         {getSteps()}
@@ -66,7 +71,9 @@ const Modal = (props) => {
                         activeStep === tutorial_videos.length-1 ? 
                         <button className='button__finish' onClick={onClose}> <strong> Done </strong> </button>
                         :
-                        <button className='button__next' onClick={onNext}> <strong>&gt;</strong> </button>
+                        <button className='button__next' onClick={onNext}>
+                            <img src={nextIcon} className="button__icon"/>
+                        </button>
                         }
                     </div>
 

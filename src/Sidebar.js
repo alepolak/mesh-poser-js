@@ -28,7 +28,7 @@ const Sidebar = (props) => {
                             singleStepMode={props.singleStepMode}
                         />
                     }
-                    <SidebarPanel>    
+                    <SidebarPanel title="EXPORT">    
                         <button  className='export__button' onClick={props.bake}> Bake mesh </button>
                     </SidebarPanel>
                 </>

@@ -75,6 +75,7 @@
     justify-content: space-around;
 }
 
+
 .step__radio {
 
 }
@@ -84,13 +85,21 @@
     height: 1.5rem;
 }
 
-button {
+.modal button {
     width: 1.5rem;
     height: 1.5rem;
     border-radius: 50%;
     border: 0;
     box-shadow: 1px 1px 5px var(--shadow-color);
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.button__icon {
+    width: 0.9rem;
+    height: 0.9rem;
 }
 
 
@@ -101,9 +110,12 @@ button {
 
 .next__button_container {
     width: 3rem;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
 }
 
-.button__finish {
+.modal .button__finish  {
     color: var(--menu-background-color);
     border-radius: 3px;
     width: 3rem;
@@ -111,5 +123,10 @@ button {
     box-shadow: 1px 1px 5px var(--shadow-color);
 }
 
-.button__next {
+.modal .button__prev {
+    padding-right: 0.5rem;
+}
+
+.modal .button__next {
+    padding-left: 0.5rem;
 }

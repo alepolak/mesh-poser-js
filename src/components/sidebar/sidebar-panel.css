@@ -10,7 +10,7 @@
     box-shadow: 5px 5px 10px var(--shadow-color);
 }
 
-.title {
+.panel__title {
     width: 100%;
     font-size: 0.75rem;
     line-height: 1rem;
