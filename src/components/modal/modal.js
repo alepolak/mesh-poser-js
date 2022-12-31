@@ -5,8 +5,6 @@ import { tutorial_videos, tutorial_description, tutorial_title } from '../../vid
 
 const Modal = (props) => {
     const [activeStep, setActiveStep] = useState(0);
-    const nextIcon = "https://img.icons8.com/ios-filled/512/forward--v1.png";
-    const prevIcon = "https://img.icons8.com/ios-filled/512/back.png";
 
     useEffect(() => {
         console.log(`Rendering: `,activeStep);
@@ -60,7 +58,7 @@ const Modal = (props) => {
                     <div className='prev__button_container'>
                         { activeStep !== 0 && 
                             <button className='button__prev' onClick={onPrevious}>   
-                                <img src={prevIcon} className="button__icon" alt='previous icon'/>
+                                Back
                             </button>}
                     </div>
                     <div className='steps__container'>
@@ -72,7 +70,7 @@ const Modal = (props) => {
                         <button className='button__finish' onClick={onClose}> <strong> Done </strong> </button>
                         :
                         <button className='button__next' onClick={onNext}>
-                            <img src={nextIcon} className="button__icon" alt='next icon'/>
+                            Next
                         </button>
                         }
                     </div>
